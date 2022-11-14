@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Realizado</title>
+
+    <!-- <script src="../../../src/socket.js"></script> -->
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+    <!-- <script src="https://kit.fontawesome.com/8910d2565a.js" crossorigin="anonymous"></script>   -->
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../../plugins/fullcalendar/main.css">
+
+    <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../../plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="../../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="../../../plugins/daterangepicker/daterangepicker.css">
+
+    <link rel="stylesheet" href="./kanban.css">
+
+</head>
+<!--
+`body` tag options:
+
+  Apply one or more of the following classes to to the body tag
+  to get the desired effect
+
+  * sidebar-collapse
+  * sidebar-mini
+-->
+
+<body class="hold-transition sidebar-collapse">
+    <div class="wrapper">
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div style="padding: 0px !important;" class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <!-- <h1 class="m-0">TEXT</h1> -->
+                        </div>
+                        <!-- /.col -->
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <div class="content" id="principal">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header"
+                                    style="text-align: -webkit-right; background-color: #5f595930 !important;">
+                                    <h3 style="color: black !important;" class="card-title"><b id="message"></b> <i
+                                            hidden id="loading" style="margin-left: 10px;"
+                                            class="fa fa-refresh fa-spin"></i>
+                                    </h3>
+                                    <button style="margin-left: 15px; width: 100px" type="button"
+                                        class="btn btn-block btn-secondary" onclick="reload()">Atualizar</button>
+                                </div>
+
+                                <div class="card-body"
+                                    style="padding: 0px !important; background-color: #5f595930 !important;">
+
+                                    <div class="drag-container">
+                                        <ul class="drag-list">
+                                            <li class="drag-column drag-column-on-hold">
+                                                <span class="drag-column-header">
+                                                    <i class="nav-icon fas fa-clock"></i>
+                                                    <h2>Ag. Agendamento</h2>
+                                                    <svg class="drag-header-more" data-target="options1" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+
+                                                <!-- <div class="drag-options" id="options1"></div> -->
+
+                                                <ul class="drag-inner-list" id="AGUARDANDO">
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
+                                            <li class="drag-column drag-column-in-progress">
+                                                <span class="drag-column-header">
+                                                    <i class="nav-icon fas fa-calendar-alt"></i>
+                                                    <h2>Agendado</h2>
+                                                    <svg class="drag-header-more" data-target="options2" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+                                                <!-- <div class="drag-options" id="options2"></div> -->
+                                                <ul class="drag-inner-list" id="AGENDADO">
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
+                                            <li class="drag-column drag-column-needs-review">
+                                                <span class="drag-column-header">
+                                                    <i class="nav-icon fas fa-calendar-check"></i>
+                                                    <h2>Carga Prog.</h2>
+                                                    <svg data-target="options3" class="drag-header-more" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+                                                <!-- <div class="drag-options" id="options3"></div> -->
+                                                <ul class="drag-inner-list" id="PROGRAMADA">
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
+                                            <li class="drag-column drag-column-approved">
+                                                <span class="drag-column-header">
+                                                    <i class="nav-icon fas fa-truck"></i>
+                                                    <h2>Em Trânsito</h2>
+                                                    <svg data-target="options4" class="drag-header-more" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+                                                <!-- <div class="drag-options" id="options4"></div> -->
+                                                <ul class="drag-inner-list" id="TRANSITO">
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
+                                            <li class="drag-column drag-column-ocorrencia">
+                                                <span class="drag-column-header">
+                                                    <i class="nav-icon fas fa-exclamation-triangle"></i>
+                                                    <h2>Ocorrências</h2>
+                                                    <svg data-target="options4" class="drag-header-more" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+                                                <!-- <div class="drag-options" id="options5"></div> -->
+                                                <ul class="drag-inner-list" id="OCORRENCIA">
+                                                    <li class="drag-item"></li>
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <script
+                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/45226/dragula.min.js"></script>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-coleta" style="display: none; color: black !important;"
+            class=aria-hidden="true">
+            <div class="modal-dialog modal-xl" style="max-width: 5800px !important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Liquidação: <b id="txtIdLiquidacao"></b></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <form id="quickForm" novalidate="novalidate">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="optFrete">Frete</label>
+                                                    <select required="" id="optFrete" class="form-control"
+                                                        onchange="changeFrete()">
+                                                        <!-- <option selected="" value="0">--Selecione--</option> -->
+                                                        <option selected value="CIF">CIF</option>
+                                                        <option value="FOB">FOB</option>
+                                                        <!-- <option value="FOB-EDIT">FOB-EDIT</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="optTransportadoras">Transportadora</label>
+                                                    <select id="optTransportadoras" keydown="tabtoenter(e)"
+                                                        onchange="changeFuncTransportadora();"
+                                                        class="form-control select2bs4Trans select2-hidden-accessible"
+                                                        style="width: 100%;" aria-hidden="true">
+                                                        <option selected value="">--Selecione--</option>
+                                                    </select>
+                                                    <input hidden name="editTransportadora" required autocomplete="off"
+                                                        type="text" class="form-control" id="editTransportadora"
+                                                        placeholder="Insira nome da transportadora">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="optCidade">Cidade</label>
+                                                    <select id="optCidade" keydown="tabtoenter(e)"
+                                                        class="form-control select2bs4Trans select2-hidden-accessible"
+                                                        style="width: 100%;" aria-hidden="true">
+                                                        <option selected value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtPlaca">Placa</label>
+                                                    <input name="txtPlaca" required autocomplete="off" type="text"
+                                                        class="form-control" id="txtPlaca" placeholder="Insira Placa">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtMotorista">Motorista</label>
+                                                    <input name="txtMotorista" required autocomplete="off" type="text"
+                                                        class="form-control" id="txtMotorista"
+                                                        placeholder="Insira nome do motorista">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtVlrFrete">Vlr Frete</label>
+                                                    <input disabled name="txtVlrFrete" required autocomplete="off"
+                                                        type="text" class="form-control" id="txtVlrFrete"
+                                                        placeholder="Vlr Frete">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Tipo</label>
+
+                                                    <!-- <div class="form-check">
+                                                        <input id="customRadio1" class="form-check-input"
+                                                            type="checkbox">
+                                                        <label class="form-check-label">Paletizada</label>
+                                                    </div>
+
+                                                    <div class="form-check">
+                                                        <input id="customRadio2" class="form-check-input"
+                                                            type="checkbox">
+                                                        <label class="form-check-label">Fracionada</label>
+                                                    </div>
+                                                     -->
+
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio1" name="customRadio" checked>
+                                                        <label for="customRadio1"
+                                                            class="custom-control-label">Paletizada</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio2" name="customRadio">
+                                                        <label for="customRadio2"
+                                                            class="custom-control-label">Fracionada</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Status</label>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="statusAgendado" name="customRadio2" checked>
+                                                        <label for="statusAgendado"
+                                                            class="custom-control-label">Agendado</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="statusAguardando" name="customRadio2">
+                                                        <label for="statusAguardando"
+                                                            class="custom-control-label">Aguardando</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label>Carregamento</label>
+                                                    <div class="form-check">
+                                                        <input id="gestao" class="form-check-input" type="checkbox">
+                                                        <label class="form-check-label">Gestão</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3" hidden>
+                                                <div class="form-group" style="padding-top: 32px;">
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio3" name="customRadio">
+                                                        <label for="customRadio3" class="custom-control-label">Carga
+                                                            Batida</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio4" name="customRadio">
+                                                        <label for="customRadio4"
+                                                            class="custom-control-label">Chep\Outros</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div class="form-group">
+                                                    <label for="txtObs">Observações NFe</label>
+                                                    <textarea style="height: 124px;" id="txtObs" class="form-control"
+                                                        placeholder=""></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5" id="datasHorarios">
+                                                <div class="form-group">
+                                                    <label>Horário da Coleta</label>
+                                                    <div class="input-group date" id="horarioColeta"
+                                                        data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input"
+                                                            data-target="#horarioColeta">
+                                                        <div class="input-group-append" data-target="#horarioColeta"
+                                                            data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Horário da Entrega</label>
+                                                    <div class="input-group date" id="horarioEntrega"
+                                                        data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input"
+                                                            data-target="#horarioEntrega">
+                                                        <div class="input-group-append" data-target="#horarioEntrega"
+                                                            data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="card-body">
+                                                <table id="example2" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Pedido</th>
+                                                            <th>Cod</th>
+                                                            <th style="width: 200px">Cliente</th>
+                                                            <th>UF</th>
+                                                            <th>Cidade</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="itens2">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="txtIdCliente">Cod.</label>
+                          <input type="text" name="Cod." class="form-control" id="txtIdCliente" placeholder="">
+                        </div>
+                      </div>
+                      <div class="col-md-10">
+                        <div class="form-group">
+                          <label for="txtCliente">Cliente</label>
+                          <input type="text" name="Nome" class="form-control" id="txtCliente" placeholder="Nome">
+                        </div>
+                      </div>
+                    </div> -->
+
+                                        <!-- /.card-body -->
+                                        <div class="card-footer" style="text-align: right; background-color: white;">
+                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                        </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <!-- jQuery -->
+        <!-- <script src="../../../../plugins/jquery/jquery.min.js"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <!-- fullCalendar 2.2.5 -->
+        <script src="../../../plugins/moment/moment.min.js"></script>
+        <script src="../../../plugins/fullcalendar/main.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+        <script
+            src="https://rawgit.com/tempusdominus/bootstrap-4/master/build/js/tempusdominus-bootstrap-4.js"></script>
+        <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css"
+            rel="stylesheet" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet" />
+
+
+        <!-- Bootstrap 4 -->
+        <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- DataTables  & Plugins -->
+        <script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="../../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="../../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="../../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+        <script src="../../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+        <script src="../../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+        <script src="../../../plugins/jszip/jszip.min.js"></script>
+        <script src="../../../plugins/pdfmake/pdfmake.min.js"></script>
+        <script src="../../../plugins/pdfmake/vfs_fonts.js"></script>
+        <script src="../../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+        <script src="../../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+        <script src="../../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+        <!-- jquery-validation -->
+        <script src="../../../plugins/jquery-validation/jquery.validate.min.js"></script>
+        <script src="../../../plugins/jquery-validation/additional-methods.min.js"></script>
+
+        <!-- <script src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"></script> -->
+        <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+        <script src="https://cdn.datatables.net/rowgroup/1.1.4/js/dataTables.rowGroup.min.js"></script>
+        <script src="https://cdn.datatables.net/plug-ins/1.11.3/api/sum().js"></script>
+        <script src="https://cdn.datatables.net/fixedcolumns/4.0.1/js/dataTables.fixedColumns.min.js"></script>
+
+
+        <script src="../../../plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- Select2 -->
+        <script src="../../../plugins/select2/js/select2.full.min.js"></script>
+
+        <link rel="stylesheet" href="../../../src/select.css">
+        <script src="../../../src/const.js"></script>
+        <!-- <script src="./table.js"></script> -->
+
+        <!-- AdminLTE App -->
+        <script src="../../../dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+
+        <script src="./script.js"></script>
+
+        <script src="./kanban.js"></script>
+
+        <!-- Page specific script -->
+        <script>
+            $(function () {
+                //Initialize Select2 Elements
+
+
+                //Initialize Select2 Elements
+                $('.select2bs4Trans').select2({
+                    theme: 'bootstrap4'
+                })
+            })
+        </script>
+        <style>
+            table.dataTable td {
+                font-size: 15px;
+            }
+
+            table.dataTable td.itens {
+                font-size: 13px;
+            }
+
+            table.dataTable th {
+                font-size: 15px;
+            }
+
+            thead,
+            th {
+                text-align: left;
+            }
+
+            .table td,
+            .table th {
+                padding: 3px !important;
+                /* padding: .2rem !important;       */
+            }
+
+
+            .t-table {
+                height: 100px;
+            }
+
+            /*  td {
+                border: 1px solid black;
+            }
+
+             td:empty {
+                border-left: 0;
+                border-right: 0;
+            } */
+
+            input[type="search"]::-webkit-search-decoration,
+            input[type="search"]::-webkit-search-cancel-button,
+            input[type="search"]::-webkit-search-results-button,
+            input[type="search"]::-webkit-search-results-decoration {
+                -webkit-appearance: none;
+            }
+
+            .modal-dialog {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .modal-content {
+                height: auto;
+                min-height: 100%;
+                border-radius: 0;
+            }
+
+            .modal {
+                padding-right: 0px !important;
+            }
+
+            .dtfc-fixed-left {
+                background-color: #f1f1f1f1;
+            }
+
+            .dtfc-fixed-right {
+                background-color: #f1f1f1f1;
+            }
+
+            #example1_wrapper {
+                padding-top: 15px;
+            }
+
+            #example2_wrapper {
+                padding-top: 15px;
+            }
+
+            /* th,
+    td {
+      white-space: nowrap;
+    }
+
+    div.dataTables_wrapper {
+      width: 800px;
+      margin: 0 auto;
+    } */
+        </style>
+</body>
+
+</html>

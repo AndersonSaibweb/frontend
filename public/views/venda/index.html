@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Objetivo X Realizado | Grupo Mariza</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <!-- loading -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+</head>
+<!--
+`body` tag options:
+
+  Apply one or more of the following classes to to the body tag
+  to get the desired effect
+
+  * sidebar-collapse
+  * sidebar-mini
+-->
+
+<body style="margin: 0px !important;" class="hold-transition sidebar-collapse">
+    <div class="wrapper">
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div style="padding: 0px !important;" class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <!-- <h1 class="m-0">TEXT</h1> -->
+                        </div>
+                        <!-- /.col -->
+
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    <div class="row">
+
+                        <!-- /.col-md-6 -->
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><b id="message"></b> <i hidden id="loading" style="margin-left: 10px;" class="fa fa-refresh fa-spin"></i>
+                                    </h3>
+                                </div>
+
+                                <div id="filtros">
+
+                                </div>
+
+                                <div class="card-body">
+
+                                    <div class="row">
+
+
+                                        <div class="col-sm-4">
+                                            <!-- select -->
+                                            <div class="form-group">
+                                                <select id="mes" class="form-control">
+                                                    <option selected="selected" value="01">Janeiro</option>
+                                                    <option value="02">Fevereiro</option>
+                                                    <option value="03">Março</option>
+                                                    <option value="04">Abril</option>
+                                                    <option value="05">Maio</option>
+                                                    <option value="06">Junho</option>
+                                                    <option value="07">Julho</option>
+                                                    <option value="08">Agosto</option>
+                                                    <option value="09">Setembro</option>
+                                                    <option value="10">Outubro</option>
+                                                    <option value="11">Novembro</option>
+                                                    <option value="12">Dezembro</option>
+                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <select id="ano" class="form-control">
+                                                    <option>2021</option>
+                                                    <option selected="selected">2022</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <!-- select -->
+                                            <div class="form-group">
+                                                <button style="margin-left: 15px; width: 100px" type="button" class="btn btn-block btn-secondary" onclick="atualizarDados()">Atualizar</button>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: left; padding-top: 0px;" class="col-sm-4">
+                                            <div class="card card-primary card-outline">
+                                                <li class="list-group-item" style="padding: 5px; text-align: center;">
+                                                    <b id="MesSelect"></b>
+                                                </li>                                                
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Objetivo do mês</b> <a class="negrito float-right" id="metaVlr"></a>
+                                                </li>
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Fatur + Carteira</b> <a class="negrito float-right" id="faturCarteiraVlr"></a>
+                                                </li> 
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b> Carteira</b> <a class="negrito float-right" id="carteiraVlr"></a>
+                                                </li>                                               
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Fauramento atual</b> <a class="negrito float-right" id="faturadoVlr"></a>
+                                                </li>
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Atingido</b> <a class="negrito float-right" id="atingidoVlr"></a>
+                                                </li> 
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Diferença</b> <a class="negrito verde_padrao float-right" id="diferenca"></a>
+                                                </li> 
+                                                <li class="list-group-item" style="padding: 5px;">
+                                                    <b>Margem</b> <a class="negrito verde_padrao float-right" id="margem"></a>
+                                                </li>                                                 
+                                                                                                                                       
+                                            </div>                                        
+                                        </div>    
+                                        <div style="text-align: left; padding-top: 0px;" class="col-sm-8">
+                                            <section id="panelArea" class="panel-layout">
+                                                <div id="widget1Area" class="widget widget-medium">
+                                                    <div id="container1Area"></div>
+                                                </div>
+                                                <div id="widget3Area" class="widget widget-medium">
+                                                    <div id="container3Area"></div>
+                                                </div>
+                                            </section>                                 
+                                        </div>                                            
+                                        
+                                                                                                                                                            
+                                    </div>
+                              
+
+                                    <section id="panel" class="panel-layout">
+                                        <div id="widget1" class="widget widget-medium">
+                                            <div id="container1"></div>
+                                        </div>
+                                        <div id="widget3" class="widget widget-medium">
+                                            <div id="container3"></div>
+                                        </div>
+
+                                        <h3 id="txtFiltro"></h3>
+                                    </section>
+
+
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col-md-6 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+
+            <div hidden class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                                <input type="text" class="form-control float-right" id="reservationtime">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- /.control-sidebar -->
+
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- fullCalendar 2.2.5 -->
+    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="../../plugins/fullcalendar/main.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="https://rawgit.com/tempusdominus/bootstrap-4/master/build/js/tempusdominus-bootstrap-4.js"></script>
+    <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- jquery-validation -->
+    <script src="../../plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../plugins/jquery-validation/additional-methods.min.js"></script>
+
+    <!-- <script src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"></script> -->
+    <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.1.4/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.11.3/api/sum().js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.0.1/js/dataTables.fixedColumns.min.js"></script>
+
+
+    <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Select2 -->
+    <script src="../../plugins/select2/js/select2.full.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <!-- <script src="../../dist/js/demo.js"></script> -->
+
+    <script src="../../src/const.js"></script>
+    <script src="./script.js"></script>
+    <!-- Page specific script -->
+    <style>
+        table.dataTable td {
+            font-size: 8px;
+        }
+        
+        thead,
+        th {
+            text-align: left;
+        }
+        
+        .tabpanel-container {
+            position: relative;
+            margin: 20px 10px 0 10px;
+            height: 45px;
+            z-index: 2;
+        }
+        
+        .tabpanel {
+            width: 320px;
+            height: 45px;
+            background: #FFFFFF;
+            -webkit-border-radius: 3px 5px 0 0;
+            -moz-border-radius: 3px 5px 0 0;
+            border-radius: 3px 5px 0 0;
+            -webkit-transform: perspective(5px) rotateX(0.93deg) translateZ(-1px);
+            transform: perspective(5px) rotateX(0.93deg) translateZ(-1px);
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        
+        .tabpanel-title {
+            position: absolute;
+            top: 2px;
+            z-index: 3;
+        }
+        
+        .tabpanel-options {
+            display: inline-block;
+            position: relative;
+            float: right;
+            top: 0px;
+            right: 0px;
+            text-align: right;
+        }
+        
+        .tabpanel-edit>i {
+            color: #757575;
+            font-size: 20px;
+            line-height: 40px;
+        }
+        
+        .sticked_to_tabpanel {
+            position: relative;
+            top: -3px;
+            margin-top: 0px;
+            z-index: 1;
+        }
+        /*--------------------
+Filtros do painel
+---------------------*/
+        
+        .filtros_container {
+            padding: 20px 20px;
+        }
+        
+        .filtros_label {
+            color: #9E9E9E;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        /*
+.tela {
+  height: 100px;
+  padding: 30px;
+}
+*/
+        /*--------------------
+Panel
+---------------------*/
+        
+        .panel {
+            background-color: #FFFFFF;
+            overflow: hidden;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(50, 50, 50, .18);
+            min-width: 341px;
+            margin: 0 10px;
+        }
+        /*--------------------
+Gráfico Totalizador
+---------------------*/
+        
+        .chart-container-totalizador {
+            margin: 30px auto;
+            text-align: center;
+        }
+        
+        .totalizador,
+        .comparativo-ano-anterior {
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .totalizador {
+            color: #212121;
+            font-size: 7vh;
+            line-height: 40px;
+            text-align: right
+        }
+        
+        .comparativo-ano-anterior {
+            text-align: left;
+            display: inline-block;
+            margin-left: 20px;
+        }
+        
+        .pill {
+            font-size: 15px;
+            font-weight: 600;
+            text-align: left;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .pill>i {
+            font-size: 18px;
+            margin-left: 0;
+            vertical-align: middle;
+        }
+        
+        .melhorou,
+        .melhorou>i {
+            background-color: #c8e6c9;
+            color: #1b5e20;
+        }
+        
+        .piorou {
+            background-color: #ffcdd2;
+            color: #7f0000;
+        }
+        
+        .totalizador-comentario {
+            color: #9e9e9e;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 25px;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+        /*--------------------
+Gráfico Gauge
+---------------------*/
+        
+        .chart-container {
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+            padding: 5px;
+        }
+        /*--------------------
+Legenda Gauge
+---------------------*/
+        
+        .legenda {
+            color: #616161;
+            font-size: 12px;
+            font-weight: normal;
+            text-align: center;
+            line-height: 15px;
+            margin: 0px 20px 10px 20px;
+        }
+        
+        .legenda-serie {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        
+        .legenda-resumo {
+            padding-top: 10px;
+            border-radius: 6px;
+            border-top: 1px solid #f5f5f5
+        }
+        
+        .legenda-destaque {
+            color: #212121;
+            font-weight: 600;
+            line-height: 20px;
+        }
+        
+        .legenda-destaque-objetivo {
+            color: #757575;
+            font-weight: 600;
+        }
+        
+        .legenda-icone-realizado,
+        .legenda-icone-objetivo {
+            display: inline-block;
+            position: relative;
+            width: 12px;
+            margin-right: 6px;
+        }
+        
+        .legenda-icone-realizado {
+            background-color: #424242;
+            height: 12px;
+            border-radius: 6px;
+            top: 1px;
+        }
+        
+        .legenda-icone-objetivo {
+            background-color: #3E2F68;
+            height: 6px;
+            margin-right: 6px;
+            top: -2px;
+        }
+        
+        .legenda i {
+            color: #57D680;
+            font-size: 16px;
+            margin-right: 3px;
+        }
+        /*--------------------
+List
+---------------------*/
+        
+        .list-container {
+            display: relative;
+            margin: 20px 20px;
+        }
+        
+        .top-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .top-list li {
+            height: 50px;
+            padding: 5px 10px;
+            border-bottom: 1px solid #F5F5F5;
+        }
+        
+        .top-list li:first-child {
+            height: 30px;
+            line-height: 20px;
+            border-bottom: none;
+        }
+        
+        .top-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .top-list li:not(:first-child):nth-child(odd) {
+            background-color: #FAFAFA;
+        }
+        
+        .top-list li:not(:first-child):hover {
+            background-color: #F5F5F5;
+            border-bottom: 1px solid #F5F5F5;
+            cursor: pointer;
+        }
+        
+        .list-header {
+            color: #9E9E9E;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 20px;
+            text-transform: uppercase;
+        }
+        
+        .list-header span>i {
+            font-size: 16px;
+            margin-left: 3px;
+            margin-right: -1px;
+            vertical-align: middle;
+        }
+        
+        .list-line,
+        .list-line-extra {
+            height: 40px;
+            color: #212121;
+            font-size: 12px;
+            font-weight: 400;
+            text-align: right;
+            line-height: 20px;
+            overflow: hidden;
+        }
+        
+        .list-header:first-child,
+        .list-line:first-child,
+        .list-line-extra {
+            text-align: left;
+        }
+        
+        .list-line>span,
+        .list-line-extra>span {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        
+        .list-header>span,
+        .list-line>span,
+        .list-line-extra>span {
+            display: inline-block;
+            min-width: 90px;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .list-line {
+            position: relative;
+        }
+        
+        .list-line:hover>a,
+        .list-line:hover>span {
+            opacity: 0;
+        }
+        
+        .list-line:hover>.list-line-extra {
+            opacity: 1;
+        }
+        
+        .list-line-extra {
+            color: #757575;
+            display: block;
+            position: absolute;
+            float: left;
+            top: 0;
+            opacity: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            z-index: 1
+        }
+        
+        .list-line>a,
+        .list-line>span,
+        .list-line-extra {
+            -webkit-transition: opacity 0.3s;
+            -moz-transition: opacity 0.3s;
+            transition: opacity 0.3s;
+        }
+        
+        span.client-name {
+            width: calc(100% - 190px);
+            padding-right: 10px;
+            text-align: left;
+        }
+        
+        .text-piorou,
+        .text-piorou>i {
+            font-size: 14px;
+            color: #d32f2f;
+            vertical-align: middle;
+        }
+        /*--------------------
+Custom Charts
+---------------------*/
+        
+        #container1,
+        #container3 {
+            width: calc(100% - 40px);
+            margin: 30px auto;
+        }
+    </style>
+</body>
+
+</html>

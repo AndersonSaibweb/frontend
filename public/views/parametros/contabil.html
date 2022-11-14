@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="../../plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="../../plugins/dropzone/min/dropzone.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <!-- Main content -->
+            <section class="content-header">
+                <div class="container-fluid">
+
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-default">
+
+                                <form class="form">
+                                    <div class="card-header">
+                                        <h2 id="titulo" class="card-title" style="padding-left: 15px;">Parâmetros Acordos</h2>
+                                    </div>
+                                    <div class="card-body" style="padding-bottom: 0px !important;">
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_PCTA_REF_DB">REF</label>
+                                                    <input type="number" class="form-control" id="PAC_PCTA_REF_DB"
+                                                        placeholder="" disabled >
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_PCTA_REF_DB_DESC">Conta Débito</label>
+                                                    <input type="text" class="form-control" id="PAC_PCTA_REF_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PAC_PCTA_REF_DB','PAC_PCTA_REF_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_HIST_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PAC_HIST_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_HIST_GEN_ID_DB_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PAC_HIST_GEN_ID_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PAC_HIST_GEN_ID_DB','PAC_HIST_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_GRUPO_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PAC_GRUPO_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_GRUPO_GEN_ID_DB_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PAC_GRUPO_GEN_ID_DB_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PAC_GRUPO_GEN_ID_DB','PAC_GRUPO_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_PCTA_REF_CR">REF</label>
+                                                    <input type="number" class="form-control" id="PAC_PCTA_REF_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_PCTA_REF_CR_DESC">Conta Crédito</label>
+                                                    <input type="text" class="form-control" id="PAC_PCTA_REF_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PAC_PCTA_REF_CR','PAC_PCTA_REF_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_HIST_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PAC_HIST_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_HIST_GEN_ID_CR_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PAC_HIST_GEN_ID_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PAC_HIST_GEN_ID_CR','PAC_HIST_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PAC_GRUPO_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PAC_GRUPO_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PAC_GRUPO_GEN_ID_CR_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PAC_GRUPO_GEN_ID_CR_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PAC_GRUPO_GEN_ID_CR','PAC_GRUPO_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br>
+                                        <hr style="margin: 0px;">
+                                        <div class="card-header">
+                                            <h2 id="titulo" class="card-title">Parâmetros Comissão</h2>
+                                        </div>
+                                        <br>
+                                     
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_PCTA_REF_DB">REF</label>
+                                                    <input type="number" class="form-control" id="PCO_PCTA_REF_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_PCTA_REF_DB_DESC">Conta Débito</label>
+                                                    <input type="text" class="form-control" id="PCO_PCTA_REF_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PCO_PCTA_REF_DB','PCO_PCTA_REF_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_HIST_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PCO_HIST_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_HIST_GEN_ID_DB_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PCO_HIST_GEN_ID_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PCO_HIST_GEN_ID_DB','PCO_HIST_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_GRUPO_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PCO_GRUPO_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_GRUPO_GEN_ID_DB_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PCO_GRUPO_GEN_ID_DB_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PCO_GRUPO_GEN_ID_DB','PCO_GRUPO_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_PCTA_REF_CR">REF</label>
+                                                    <input type="number" class="form-control" id="PCO_PCTA_REF_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_PCTA_REF_CR_DESC">Conta Crédito</label>
+                                                    <input type="text" class="form-control" id="PCO_PCTA_REF_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PCO_PCTA_REF_CR','PCO_PCTA_REF_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_HIST_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PCO_HIST_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_HIST_GEN_ID_CR_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PCO_HIST_GEN_ID_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PCO_HIST_GEN_ID_CR','PCO_HIST_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PCO_GRUPO_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PCO_GRUPO_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PCO_GRUPO_GEN_ID_CR_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PCO_GRUPO_GEN_ID_CR_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PCO_GRUPO_GEN_ID_CR','PCO_GRUPO_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <br>
+                                        <hr style="margin: 0px;">
+                                        <div class="card-header">
+                                            <h2 id="titulo" class="card-title">Parâmetros Frete</h2>
+                                        </div>
+                                        <br>
+                                     
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_PCTA_REF_DB">REF</label>
+                                                    <input type="number" class="form-control" id="PFR_PCTA_REF_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_PCTA_REF_DB_DESC">Conta Débito</label>
+                                                    <input type="text" class="form-control" id="PFR_PCTA_REF_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PFR_PCTA_REF_DB','PFR_PCTA_REF_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_HIST_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PFR_HIST_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_HIST_GEN_ID_DB_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PFR_HIST_GEN_ID_DB_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PFR_HIST_GEN_ID_DB','PFR_HIST_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_GRUPO_GEN_ID_DB">ID</label>
+                                                    <input type="number" class="form-control" id="PFR_GRUPO_GEN_ID_DB"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_GRUPO_GEN_ID_DB_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PFR_GRUPO_GEN_ID_DB_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PFR_GRUPO_GEN_ID_DB','PFR_GRUPO_GEN_ID_DB_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_PCTA_REF_CR">REF</label>
+                                                    <input type="number" class="form-control" id="PFR_PCTA_REF_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_PCTA_REF_CR_DESC">Conta Crédito</label>
+                                                    <input type="text" class="form-control" id="PFR_PCTA_REF_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-planoconta" onclick="pesquisa('PFR_PCTA_REF_CR','PFR_PCTA_REF_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_HIST_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PFR_HIST_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_HIST_GEN_ID_CR_DESC">Histórico</label>
+                                                    <input type="text" class="form-control" id="PFR_HIST_GEN_ID_CR_DESC"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-historicos" onclick="pesquisa('PFR_HIST_GEN_ID_CR','PFR_HIST_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label for="PFR_GRUPO_GEN_ID_CR">ID</label>
+                                                    <input type="number" class="form-control" id="PFR_GRUPO_GEN_ID_CR"
+                                                        placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label for="PFR_GRUPO_GEN_ID_CR_DESC">Grupo</label>
+                                                    <input type="text" class="form-control"
+                                                        id="PFR_GRUPO_GEN_ID_CR_DESC" placeholder="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <div class="form-group">
+                                                    <label style="color: white;">Pesquisar</label>
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#modal-grupos" onclick="pesquisa('PFR_GRUPO_GEN_ID_CR','PFR_GRUPO_GEN_ID_CR_DESC')">
+                                                        <i class="nav-icon fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+
+                                    <div class="card-footer" style="text-align: right;">
+                                        <button type="button" class="btn btn-primary" onclick="update()">Atualizar</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modal-planoconta" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <!-- <h4 class="modal-title">Selecionar plano de conta</h4> -->
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body table-responsive p-0">
+                                                    <table class="table table-hover text-nowrap" id="tablePesquisa">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ref</th>
+                                                                <th>Conta</th>
+                                                                <th>Descrição</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="unselect" id="itens">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div> -->
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal fade" id="modal-historicos" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <!-- <h4 class="modal-title">Selecionar plano de conta</h4> -->
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body table-responsive p-0">
+                                                    <table class="table table-hover text-nowrap" id="tableHistoricos">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Descrição</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="unselect" id="itensHistoricos">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div> -->
+                            </div>
+
+                        </div>
+
+                    </div>      
+                    
+                    <div class="modal fade" id="modal-grupos" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <!-- <h4 class="modal-title">Selecionar plano de conta</h4> -->
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body table-responsive p-0">
+                                                    <table class="table table-hover text-nowrap" id="tableGrupos">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Descrição</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="unselect" id="itensGrupos">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div> -->
+                            </div>
+
+                        </div>
+
+                    </div>                          
+                    <!-- /.row -->
+
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="../../plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="../../plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- InputMask -->
+    <script src="../../plugins/moment/moment.min.js"></script>
+    <script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="../../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="../../plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- BS-Stepper -->
+    <script src="../../plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <!-- dropzonejs -->
+    <script src="../../plugins/dropzone/min/dropzone.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+
+
+    <script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- <script src="../../js/ajax.js"></script> -->
+    <!-- <script src="mask.js"></script> -->
+    <script src="../../src/const.js"></script>
+    <script src="./contabil/script.js"></script>
+
+    <!-- Page specific script -->
+    <style>
+        table.dataTable td {
+            font-size: 14px;
+        }
+
+        table.dataTable th {
+            font-size: 14px;
+        }
+
+        thead,
+        th {
+            text-align: left;
+        }
+
+        .table td,
+        .table th {
+            padding: 3px !important;
+            /* padding: .2rem !important;       */
+        }
+
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+        }
+
+        /* .modal-body {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+    } */
+
+        /* .modal-dialog {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        } */
+
+        .modal-content {
+            height: auto;
+            min-height: 100%;
+            border-radius: 0;
+        }
+
+        .modal {
+            padding-right: 0px !important;
+        }
+
+        textarea {
+            text-transform: uppercase;
+        }
+
+        .unselect {
+            -webkit-user-select: none;
+            /* Safari */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* IE10+/Edge */
+            user-select: none;
+            /* Standard */
+        }
+    </style>
+
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+        })
+
+    </script>
+</body>
+
+</html>

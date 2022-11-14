@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Margem | Grupo Mariza</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  <!-- loading -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../../../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+</head>
+<!--
+`body` tag options:
+
+  Apply one or more of the following classes to to the body tag
+  to get the desired effect
+
+  * sidebar-collapse
+  * sidebar-mini
+-->
+
+<body class="hold-transition sidebar-collapse">
+  <div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div style="padding: 0px !important;" class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <!-- <h1 class="m-0">TEXT</h1> -->
+            </div><!-- /.col -->
+
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title"><b id="message">Atualizando..</b> <i hidden id="loading"
+                      style="margin-left: 10px;" class="fa fa-refresh fa-spin"></i>
+                  </h3>
+                </div>
+
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Filtros</label>
+                        <div class="select2-purple">
+                          <select class="select2 select2-hidden-accessible" multiple="" data-placeholder="--Selecione--"
+                            data-dropdown-css-class="select2-purple" style="width: 100%;" data-select2-id="15"
+                            tabindex="-1" aria-hidden="true">
+                            <option>Area</option>
+                            <option>Gerente</option>
+                            <option>Representante</option>
+                            <option>Vendedor</option>
+                            <option>Cliente</option>
+                            <option>Embalagem</option>
+                            <option>Cod Prod</option>
+                            <option>Produto</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6" style="padding-top: 32px;">
+                      <button hidden id="btnAtt" onclick="atualizarTabela()" style="width: 100px;" type="button"
+                        class="btn btn-block btn-secondary">Atualizar</button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="card-body">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead id="head">
+
+                    </thead>
+                    <tbody id="itens">
+
+                    </tbody>
+
+                    <tfoot id="foot">
+
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+            </div>
+            <!-- /.col -->
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- REQUIRED SCRIPTS -->
+
+  <!-- jQuery -->
+  <script src="../../../plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE -->
+  <script src="../../../dist/js/adminlte.js"></script>
+
+  <!-- OPTIONAL SCRIPTS -->
+  <script src="../../../plugins/chart.js/Chart.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="../../../dist/js/demo.js"></script>
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <script src="../../../dist/js/pages/dashboard3.js"></script>
+
+  <!-- DataTables  & Plugins -->
+  <script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="../../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+  <script src="../../../plugins/jszip/jszip.min.js"></script>
+  <script src="../../../plugins/pdfmake/pdfmake.min.js"></script>
+  <script src="../../../plugins/pdfmake/vfs_fonts.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+  <script src="./rowsgroup.js"></script>
+
+  <!-- AdminLTE App -->
+  <script src="../../../dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="../../../dist/js/demo.js"></script>
+  <script src="../../../src/const.js"></script>
+  <script src="./script.js"></script>
+
+
+  <!-- Select2 -->
+  <script src="../../../plugins/select2/js/select2.full.min.js"></script>
+  <!-- Page specific script -->
+  <script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+      //Initialize Select2 Elements
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
+    })
+
+    // $(function () {
+    //   $("#example1").DataTable({
+    //     "language":
+    //     {
+    //       "sZeroRecords": "Não foram encontrados resultados",
+    //     },
+    //     "searching": false,
+    //     "lengthChange": false,
+    //     "paging": false,
+    //     "info": false,
+    //     "buttons": [
+    //       {
+    //         text: 'Atualizar',
+    //         action: function (e, dt, node, config) {
+    //           atualizarTabela()
+    //         }
+    //       }
+    //     ]
+    //     // "buttons": [
+    //     //   { extend: 'copy', text: 'Copiar dados' },
+    //     //   "excel", "pdf",
+    //     //   { extend: 'print', text: 'Imprimir' },
+    //     //   { extend: 'colvis', text: 'Colunas' }
+    //     // ]
+    //     // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    //   }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    // });
+  </script>
+  <style>
+    table.dataTable td {
+      font-size: 12px;
+    }
+
+    table.dataTable th {
+      font-size: 12px;
+    }
+
+    thead,
+    th {
+      text-align: left;
+    }
+
+    .table td,
+    .table th {
+      padding: 0px !important;
+      /* padding: .2rem !important;       */
+    }
+  </style>
+</body>
+
+</html>

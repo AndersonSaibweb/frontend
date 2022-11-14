@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agendamentos Carga | Grupo Mariza</title>
+  <script src="../../../src/socket.js"></script>
+  <!-- Google Font: Source Sans Pro -->
+  <!-- <script src="http://localhost:8080/socket.io/socket.io.js"></script> -->
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  <!-- loading -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../../../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<!--
+`body` tag options:
+
+  Apply one or more of the following classes to to the body tag
+  to get the desired effect
+
+  * sidebar-collapse
+  * sidebar-mini
+-->
+
+<body class="hold-transition sidebar-collapse">
+  <div class="wrapper">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <div style="padding: 0px !important;" class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <!-- <h1 class="m-0">TEXT</h1> -->
+            </div><!-- /.col -->
+
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <div class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title"><b id="message">Atualizando..</b> <i hidden id="loading"
+                      style="margin-left: 10px;" class="fa fa-refresh fa-spin"></i> </h3>
+                  </br><button hidden id="btnAbrirChamado" type="button" class="btn btn-primary"
+                    onclick="openChamado()">Abrir um chamado</button>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <div hidden>
+                    Colunas:
+                    <a class="toggle-vis" data-column="0">Marca</a> -
+                    <a class="toggle-vis" data-column="1">Embalagem</a> -
+                    <a class="toggle-vis" data-column="2">Cod</a> -
+                    <a class="toggle-vis" data-column="3">Produto</a> -
+                    <a class="toggle-vis" data-column="4">Estoque Atual</a> -
+                    <a class="toggle-vis" data-column="5">Carteira</a>
+                    <a class="toggle-vis" data-column="5">Venda Mensal</a>
+                    <a class="toggle-vis" data-column="5">Venda Semanal</a>
+                    <a class="toggle-vis" data-column="5">Dias</a>
+                    <a class="toggle-vis" data-column="5">A Produri</a>
+                  </div>
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead id="head">
+                    </thead>
+                    <tbody id="itens">
+
+                    </tbody>
+                    <tfoot id="foot">
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+            </div>
+            <!-- /.col -->
+          </div>
+
+          <div hidden class="row">
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Online Store Visitors</h3>
+                    <a href="javascript:void(0);">View Report</a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex">
+                    <p class="d-flex flex-column">
+                      <span class="text-bold text-lg">820</span>
+                      <span>Visitors Over Time</span>
+                    </p>
+                    <p class="ml-auto d-flex flex-column text-right">
+                      <span class="text-success">
+                        <i class="fas fa-arrow-up"></i> 12.5%
+                      </span>
+                      <span class="text-muted">Since last week</span>
+                    </p>
+                  </div>
+                  <!-- /.d-flex -->
+
+                  <div class="position-relative mb-4">
+                    <canvas id="visitors-chart" height="200"></canvas>
+                  </div>
+
+                  <div class="d-flex flex-row justify-content-end">
+                    <span class="mr-2">
+                      <i class="fas fa-square text-primary"></i> This Week
+                    </span>
+
+                    <span>
+                      <i class="fas fa-square text-gray"></i> Last Week
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card -->
+
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">Products</h3>
+                  <div class="card-tools">
+                    <a href="#" class="btn btn-tool btn-sm">
+                      <i class="fas fa-download"></i>
+                    </a>
+                    <a href="#" class="btn btn-tool btn-sm">
+                      <i class="fas fa-bars"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-striped table-valign-middle">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Sales</th>
+                        <th>More</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <img src="../../../dist/img/default-150x150.png" alt="Product 1"
+                            class="img-circle img-size-32 mr-2">
+                          Some Product
+                        </td>
+                        <td>$13 USD</td>
+                        <td>
+                          <small class="text-success mr-1">
+                            <i class="fas fa-arrow-up"></i>
+                            12%
+                          </small>
+                          12,000 Sold
+                        </td>
+                        <td>
+                          <a href="#" class="text-muted">
+                            <i class="fas fa-search"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <img src="../../../dist/img/default-150x150.png" alt="Product 1"
+                            class="img-circle img-size-32 mr-2">
+                          Another Product
+                        </td>
+                        <td>$29 USD</td>
+                        <td>
+                          <small class="text-warning mr-1">
+                            <i class="fas fa-arrow-down"></i>
+                            0.5%
+                          </small>
+                          123,234 Sold
+                        </td>
+                        <td>
+                          <a href="#" class="text-muted">
+                            <i class="fas fa-search"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <img src="../../../dist/img/default-150x150.png" alt="Product 1"
+                            class="img-circle img-size-32 mr-2">
+                          Amazing Product
+                        </td>
+                        <td>$1,230 USD</td>
+                        <td>
+                          <small class="text-danger mr-1">
+                            <i class="fas fa-arrow-down"></i>
+                            3%
+                          </small>
+                          198 Sold
+                        </td>
+                        <td>
+                          <a href="#" class="text-muted">
+                            <i class="fas fa-search"></i>
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <img src="../../../dist/img/default-150x150.png" alt="Product 1"
+                            class="img-circle img-size-32 mr-2">
+                          Perfect Item
+                          <span class="badge bg-danger">NEW</span>
+                        </td>
+                        <td>$199 USD</td>
+                        <td>
+                          <small class="text-success mr-1">
+                            <i class="fas fa-arrow-up"></i>
+                            63%
+                          </small>
+                          87 Sold
+                        </td>
+                        <td>
+                          <a href="#" class="text-muted">
+                            <i class="fas fa-search"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col-md-6 -->
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Sales</h3>
+                    <a href="javascript:void(0);">View Report</a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex">
+                    <p class="d-flex flex-column">
+                      <span class="text-bold text-lg">$18,230.00</span>
+                      <span>Sales Over Time</span>
+                    </p>
+                    <p class="ml-auto d-flex flex-column text-right">
+                      <span class="text-success">
+                        <i class="fas fa-arrow-up"></i> 33.1%
+                      </span>
+                      <span class="text-muted">Since last month</span>
+                    </p>
+                  </div>
+                  <!-- /.d-flex -->
+
+                  <div class="position-relative mb-4">
+                    <canvas id="sales-chart" height="200"></canvas>
+                  </div>
+
+                  <div class="d-flex flex-row justify-content-end">
+                    <span class="mr-2">
+                      <i class="fas fa-square text-primary"></i> This year
+                    </span>
+
+                    <span>
+                      <i class="fas fa-square text-gray"></i> Last year
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card -->
+
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">Online Store Overview</h3>
+                  <div class="card-tools">
+                    <a href="#" class="btn btn-sm btn-tool">
+                      <i class="fas fa-download"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-tool">
+                      <i class="fas fa-bars"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                    <p class="text-success text-xl">
+                      <i class="ion ion-ios-refresh-empty"></i>
+                    </p>
+                    <p class="d-flex flex-column text-right">
+                      <span class="font-weight-bold">
+                        <i class="ion ion-android-arrow-up text-success"></i> 12%
+                      </span>
+                      <span class="text-muted">CONVERSION RATE</span>
+                    </p>
+                  </div>
+                  <!-- /.d-flex -->
+                  <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+                    <p class="text-warning text-xl">
+                      <i class="ion ion-ios-cart-outline"></i>
+                    </p>
+                    <p class="d-flex flex-column text-right">
+                      <span class="font-weight-bold">
+                        <i class="ion ion-android-arrow-up text-warning"></i> 0.8%
+                      </span>
+                      <span class="text-muted">SALES RATE</span>
+                    </p>
+                  </div>
+                  <!-- /.d-flex -->
+                  <div class="d-flex justify-content-between align-items-center mb-0">
+                    <p class="text-danger text-xl">
+                      <i class="ion ion-ios-people-outline"></i>
+                    </p>
+                    <p class="d-flex flex-column text-right">
+                      <span class="font-weight-bold">
+                        <i class="ion ion-android-arrow-down text-danger"></i> 1%
+                      </span>
+                      <span class="text-muted">REGISTRATION RATE</span>
+                    </p>
+                  </div>
+                  <!-- /.d-flex -->
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-6 -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+    </div>
+    <div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div id="bodyModal">
+            <p>body</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Confirmar</button>
+            <button type="button" class="btn btn-danger" onclick="closeModal()">Fechar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade" id="modal-associar" style="display: none;" aria-hidden="true">
+      <!-- <div class="modal-dialog modal-lg"> -->
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="">Associar cargar</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body" style="padding: 0px;">
+
+            <div class="card card-primary card-outline card-outline-tabs">
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- The time line -->
+
+                    <div id="divChamado" style="padding: 15px;">
+
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-sm-8">
+                            <label for="txtAssociarCarga">Carga / Liquidação</label>
+                            <input required autocomplete="off" type="text" class="form-control"
+                              id="txtAssociarCarga" placeholder="Insira a carga">
+                          </div>
+                          <div class="col-sm-4">
+                            <button style="margin-top: 31px;" id="btnAssociar" onclick="associarCarga()" type="button"
+                              class="btn btn-primary">Associar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.col -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal-chamado" style="display: none;" aria-hidden="true">
+      <!-- <div class="modal-dialog modal-lg"> -->
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="">Abrir um chamado</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body" style="padding: 0px;">
+
+            <div class="card card-primary card-outline card-outline-tabs">
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- The time line -->
+
+                    <div id="divChamado" style="padding: 15px;">
+
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-sm-8">
+                            <label for="txtChamadoTransportadora">Transportadora</label>
+                            <input required autocomplete="off" type="text" class="form-control"
+                              id="txtChamadoTransportadora" placeholder="Insira a Transportadora">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="txtChamadoPlaca">Placa</label>
+                            <input required autocomplete="off" type="text" class="form-control" id="txtChamadoPlaca"
+                              placeholder="Insira a Placa">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-sm-8">
+                            <label for="txtChamadaMotorista">Motorista</label>
+                            <input required autocomplete="off" type="text" class="form-control" id="txtChamadaMotorista"
+                              placeholder="Insira o nome do motorista">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="txtChamadoCpfMotorista">CPF motorista</label>
+                            <input required autocomplete="off" type="text" class="form-control"
+                              id="txtChamadoCpfMotorista" placeholder="Insira o CPF">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style="text-align: right; padding-top: 5px;">
+                        <button id="btnChamado" onclick="abrirChamado()" type="button"
+                          class="btn btn-primary">Confirmar</button>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- /.col -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modal-default2" style="display: none;" aria-hidden="true">
+      <!-- <div class="modal-dialog modal-lg"> -->
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal2"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body" style="padding: 0px;">
+
+            <div class="card card-primary card-outline card-outline-tabs">
+              <div class="card-header p-0 border-bottom-0">
+                <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-four-detalhes-tab" data-toggle="pill"
+                      href="#custom-tabs-four-detalhes" role="tab" aria-controls="custom-tabs-four-detalhes"
+                      aria-selected="true">
+                      <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">Detalhes</font>
+                      </font>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-four-editar-tab" data-toggle="pill"
+                      href="#custom-tabs-four-editar" role="tab" aria-controls="custom-tabs-four-editar"
+                      aria-selected="false">
+                      <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">Editar</font>
+                      </font>
+                    </a>
+                  </li>
+                  <li hidden class="nav-item">
+                    <a class="nav-link" id="custom-tabs-four-ocorrencia-tab" data-toggle="pill"
+                      href="#custom-tabs-four-ocorrencia" role="tab" aria-controls="custom-tabs-four-ocorrencia"
+                      aria-selected="false">
+                      <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">Ocorrencia</font>
+                      </font>
+                    </a>
+                  </li>
+                  <li hidden class="nav-item">
+                    <a class="nav-link" id="custom-tabs-four-historico-tab" data-toggle="pill"
+                      href="#custom-tabs-four-historico" role="tab" aria-controls="custom-tabs-four-historico"
+                      aria-selected="false">
+                      <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">Histórico</font>
+                      </font>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-four-tabContent">
+                  <div class="tab-pane fade active show" id="custom-tabs-four-detalhes" role="tabpanel"
+                    aria-labelledby="custom-tabs-four-detalhes-tab">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <!-- The time line -->
+                        <div id="timelineLista" class="timeline">
+                          <!-- timeline time label -->
+                          <div class="time-label">
+                            <span id="txtData" class="bg-blue"></span>
+                          </div>
+
+                          <div>
+                            <i class="fas fa-user bg-green"></i>
+                            <div class="timeline-item">
+                              <!-- <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span> -->
+                              <h3 class="timeline-header no-border">
+                                <a id="txtTitleCliente" href="#"></a>
+                              </h3>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div id="divRegistrar" style="padding: 15px;">
+
+                          <div class="form-group">
+                            <label>Status</label>
+                            <select required id="optStatus" class="form-control" onchange="verify()">
+                              <option value="">--Selecione--</option>
+                              <option id="viewChegadaPortaria" value="A">CHEGADA NA PORTARIA</option>
+                              <option id="viewEntradaLiberada" value="B">ENTRADA LIBERADA</option>
+                              <option id="viewCarregamentoIniciado" value="C">CARREGAMENTO INICIADO</option>
+                              <option id="viewCarregamentoFinalizado" value="D">CARREGAMENTO FINALIZADO</option>
+                              <option id="viewSaidaLiberada" value="E">SAIDA NA PORTARIA</option>
+                              <option id="viewOcorrencia" value="F">OCORRÊNCIA</option>
+                            </select>
+                          </div>
+
+                          <div id="inputMotorista" class="form-group">
+                            <label for="txtCpfMotorista">CPF motorista</label>
+                            <input required autocomplete="off" type="text" class="form-control" id="txtCpfMotorista"
+                              placeholder="Insira o CPF">
+                          </div>
+
+                          <div hidden id="optOcorrenciasGroup" class="form-group">
+                            <label>Ocorrências</label>
+                            <select required id="optOcorrencias" onchange="changeFunc();"
+                              class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;"
+                              tabindex="-1" aria-hidden="true">
+                              <option selected value="">--Selecione--</option>
+                            </select>
+                          </div>
+
+                          <label id="txtObs">Observação</label>
+                          <textarea style="height: 70px;" id="txtNovaMensagem" class="form-control"
+                            placeholder="Observação"></textarea>
+                          <div style="text-align: right; padding-top: 5px;">
+                            <button id="btnRegistro" onclick="registrar()" type="button"
+                              class="btn btn-primary">Registrar</button>
+                          </div>
+                        </div>
+
+                      </div>
+                      <!-- /.col -->
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-four-editar" role="tabpanel"
+                    aria-labelledby="custom-tabs-four-editar-tab">
+                    <div class="form-group">
+                      <label for="txtTransportadora">Transportadora</label>
+                      <input required autocomplete="off" type="text" class="form-control" id="txtTransportadora"
+                        placeholder="Transportadora">
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="txtFrete">Frete</label>
+                          <input required autocomplete="off" type="text" class="form-control" id="txtFrete"
+                            placeholder="Tipo do Frete">
+                        </div>
+
+                        <div class="col-sm-6">
+                          <label for="txtPlaca">Placa</label>
+                          <input required autocomplete="off" type="text" class="form-control" id="txtPlaca"
+                            placeholder="Insira Placa">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="txtMotorista">Motorista</label>
+                      <input required autocomplete="off" type="text" class="form-control" id="txtMotorista"
+                        placeholder="Motorista">
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="txtData">Data</label>
+                          <input required autocomplete="off" type="text" class="form-control" id="txtData"
+                            placeholder="Data prevista">
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="txtHora">Hora</label>
+                          <input required autocomplete="off" type="text" class="form-control" id="txtHora"
+                            placeholder="Hora prevista">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="custom-tabs-four-ocorrencia" role="tabpanel"
+                      aria-labelledby="custom-tabs-four-ocorrencia-tab">
+                      2
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-four-historico" role="tabpanel"
+                      aria-labelledby="custom-tabs-four-historico-tab">
+                      3
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- /.content-wrapper -->
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+
+    <!-- ./wrapper -->
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <!-- <script src="../../../plugins/jquery/jquery.min.js"></script> -->
+
+
+
+    <!-- AdminLTE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js"
+      type="text/javascript"></script>
+
+    <!-- Bootstrap -->
+    <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="../../../dist/js/adminlte.js"></script>
+
+    <!-- OPTIONAL SCRIPTS -->
+    <script src="../../../plugins/chart.js/Chart.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../../dist/js/demo.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="../../../dist/js/pages/dashboard3.js"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="./rowsgroup.js"></script>
+
+    <!-- AdminLTE App -->
+    <script src="../../../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../../dist/js/demo.js"></script>
+    <script src="../../../src/const.js"></script>
+    <script src="./mask.js"></script>
+    <script src="./script.js"></script>
+
+    <!-- Select2 -->
+    <script src="../../../plugins/select2/js/select2.full.min.js"></script>
+    <script>
+
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
+    </script>
+    <div id="context-menu">
+      <div id="context-menu-item-add" class="context-menu-item">
+      </div>
+    </div>
+    <style>
+      #context-menu {
+        position: absolute;
+        display: none;
+      }
+
+      table.dataTable td {
+        font-size: 13px;
+      }
+
+      table.dataTable th {
+        font-size: 13px;
+      }
+
+      thead,
+      th {
+        text-align: left;
+      }
+
+      .table td,
+      .table th {
+        padding: 3px !important;
+        /* padding: .2rem !important;       */
+      }
+
+      .modal-body {
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+      }
+
+      .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      input[type="search"]::-webkit-search-decoration,
+      input[type="search"]::-webkit-search-cancel-button,
+      input[type="search"]::-webkit-search-results-button,
+      input[type="search"]::-webkit-search-results-decoration {
+        -webkit-appearance: none;
+      }
+    </style>
+</body>
+
+</html>

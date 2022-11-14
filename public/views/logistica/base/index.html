@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+  <!-- <script src="https://kit.fontawesome.com/8910d2565a.js" crossorigin="anonymous"></script>   -->
+  <!-- DataTables -->
+  <link rel="stylesheet" href="../../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Navbar -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div hidden class="card-header">
+                  <button onclick="getPedidosStatus()" class="btn btn-info">
+                    Atualizar lista
+                  </button>
+                </div>
+
+                <div class="card-header">
+                  <h3 class="card-title"><b id="message">Atualizando..</b> <i hidden id="loading"
+                      style="margin-left: 10px;" class="fa fa-refresh fa-spin"></i> </h3>
+
+                </div>
+
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th style="width:70px">Pedido</th>
+                        <th style="width:90px">Peso Bruto</th>
+                        <th style="width:60px">Cliente</th>
+                        <th>Razão Social</th>
+                        <th style="width:20px">UF</th>
+                        <th>Cidade</th>
+                        <th style="width:120px">Situação</th>
+                      </tr>
+                    </thead>
+                    <tbody id="itens">
+                    </tbody>
+                    <!-- <tfoot>
+                      <tr>
+                        <th>Rendering engine</th>
+                        <th>Browser</th>
+                        <th>Platform(s)</th>
+                        <th>Engine version</th>
+                        <th>CSS grade</th>
+                      </tr>
+                    </tfoot> -->
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    </div>
+
+
+    <div class="modal fade" id="modal-default2" style="display: none;" aria-hidden="true">
+      <!-- <div class="modal-dialog modal-lg"> -->
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal2"></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Timelime example  -->
+            <div class="row">
+              <div class="col-md-12">
+                <!-- The time line -->
+                <div style="padding: 15px;">
+                  <div class="form-group">
+                    <label>Grupo de Usuario</label>
+                    <select required id="optGrupoUsuario" class="form-control">
+                      <option value="">--Selecione--</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.timeline -->
+            <div style="text-align: right; padding-top: 5px;">
+              <button onclick="salvar()" type="button" class="btn btn-primary">Salvar</button>
+            </div>
+          </div>
+          <!--    <div class="modal-footer">
+       <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div> -->
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- jQuery -->
+  <script src="../../../plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables  & Plugins -->
+  <script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="../../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+  <script src="../../../plugins/jszip/jszip.min.js"></script>
+  <script src="../../../plugins/pdfmake/pdfmake.min.js"></script>
+  <script src="../../../plugins/pdfmake/vfs_fonts.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+  <script src="../../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+  <!-- <script src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"></script> -->
+  <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+  <link rel="stylesheet" href="select.css">
+
+  <!-- AdminLTE App -->
+  <script src="../../../dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="../../../dist/js/demo.js"></script>
+  <!-- Page specific script -->
+  <script>
+    // $(function () {
+    //   $("#example1").DataTable({
+    //     "responsive": true, "lengthChange": false, "autoWidth": false
+    //   })
+    //   $('#example2').DataTable({
+    //     "paging": true,
+    //     "lengthChange": false,
+    //     "searching": false,
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false,
+    //     "responsive": true,
+    //   });
+    // });
+  </script>
+  <style>
+    table.dataTable td {
+      font-size: 14px;
+    }
+
+    table.dataTable th {
+      font-size: 14px;
+    }
+
+    thead,
+    th {
+      text-align: left;
+    }
+
+    .table td,
+    .table th {
+      padding: 3px !important;
+      /* padding: .2rem !important;       */
+    }
+
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+    }
+
+    table.dataTable tr th.select-checkbox.selected::after {
+      content: "✔";
+      margin-top: -11px;
+      margin-left: -4px;
+      text-align: center;
+      text-shadow: rgb(176, 190, 217) 1px 1px, rgb(176, 190, 217) -1px -1px, rgb(176, 190, 217) 1px -1px, rgb(176, 190, 217) -1px 1px;
+    }
+
+
+    .modal-body {
+      max-height: calc(100vh - 210px);
+      overflow-y: auto;
+    }
+  </style>
+  <!-- <script src="ajax.js"></script> -->
+  <!-- <script src="select.js"></script> -->
+  <script src="../../../src/const.js"></script>
+  <script src="index.js"></script>
+
+</body>
+
+</html>

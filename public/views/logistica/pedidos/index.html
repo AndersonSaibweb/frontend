@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="../../../src/socket.js"></script>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+    <!-- <script src="https://kit.fontawesome.com/8910d2565a.js" crossorigin="anonymous"></script>   -->
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../../plugins/fullcalendar/main.css">
+
+    <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="../../../plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="../../../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div hidden class="card-header">
+                                    <button onclick="getPedidosStatus()" class="btn btn-info">
+                                        Atualizar lista
+                                    </button>
+                                </div>
+
+                                <div class="card-header">
+                                    <h3 class="card-title"><b id="message">Atualizando..</b> <i hidden id="loading"
+                                            style="margin-left: 10px;" class="fa fa-refresh fa-spin"></i> </h3>
+
+                                </div>
+
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th style="width:70px">Pedido</th>
+                                                <th style="width:70px">Data</th>
+                                                <th style="width:90px">Peso Bruto</th>
+                                                <th style="width:60px">Cliente</th>
+                                                <th>Razão Social</th>
+                                                <th style="width:20px">UF</th>
+                                                <th>Cidade</th>
+                                                <th style="width:20px">Agrupamento</th>
+                                                <th style="width:100px">Situação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="itens">
+                                        </tbody>
+                                        <!-- <tfoot>
+                      <tr>
+                        <th>Rendering engine</th>
+                        <th>Browser</th>
+                        <th>Platform(s)</th>
+                        <th>Engine version</th>
+                        <th>CSS grade</th>
+                      </tr>
+                    </tfoot> -->
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+
+
+        <div class="modal fade" id="modal-default2" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="">Restaurar Liquidação
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 0px;">
+
+                        <div class="card card-primary card-outline card-outline-tabs">
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- The time line -->
+
+                                        <div id="divChamado" style="padding: 15px;">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <label for="txtLiquidacao">Carga / Liquidação</label>
+                                                        <input required autocomplete="off" type="text"
+                                                            class="form-control" id="txtLiquidacao"
+                                                            placeholder="Insira a carga">
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <button style="margin-top: 31px;" id="btnRetornaLiqui"
+                                                            onclick="retornarLiquidacao()" type="button"
+                                                            class="btn btn-primary">Restaurar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal-coleta" style="display: none" class=aria-hidden="true">
+            <div class="modal-dialog modal-xl" style="max-width: 5800px !important;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Gerar Coleta <b id="txtIdLiquidacao"></b></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <form id="quickForm" novalidate="novalidate">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="optFrete">Frete</label>
+                                                    <select required="" id="optFrete" class="form-control"
+                                                        onchange="changeFrete()">
+                                                        <!-- <option selected="" value="0">--Selecione--</option> -->
+                                                        <option selected value="CIF">CIF</option>
+                                                        <option value="FOB">FOB</option>
+                                                        <!-- <option value="FOB-EDIT">FOB-EDIT</option> -->
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="optTransportadoras">Transportadora</label>
+                                                    <select id="optTransportadoras" keydown="tabtoenter(e)"
+                                                        onchange="changeFuncTransportadora();"
+                                                        class="form-control select2bs4Trans select2-hidden-accessible"
+                                                        style="width: 100%;" aria-hidden="true">
+                                                        <option selected value="">--Selecione--</option>
+                                                    </select>
+                                                    <input hidden name="editTransportadora" required autocomplete="off"
+                                                        type="text" class="form-control" id="editTransportadora"
+                                                        placeholder="Insira nome da transportadora">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="optCidade">Cidade</label>
+                                                    <select id="optCidade" keydown="tabtoenter(e)"
+                                                        class="form-control select2bs4Trans select2-hidden-accessible"
+                                                        style="width: 100%;" aria-hidden="true">
+                                                        <option selected value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtPlaca">Placa</label>
+                                                    <input name="txtPlaca" required autocomplete="off" type="text"
+                                                        class="form-control" id="txtPlaca" placeholder="Insira Placa">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtMotorista">Motorista</label>
+                                                    <input name="txtMotorista" required autocomplete="off" type="text"
+                                                        class="form-control" id="txtMotorista"
+                                                        placeholder="Insira nome do motorista">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group" style="padding-top: 10px">
+                                                    <label for="txtVlrFrete">Vlr Frete</label>
+                                                    <input disabled name="txtVlrFrete" required autocomplete="off"
+                                                        type="text" class="form-control" id="txtVlrFrete"
+                                                        placeholder="Vlr Frete">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Tipo</label>
+
+                                                    <!-- <div class="form-check">
+                                                        <input id="customRadio1" class="form-check-input"
+                                                            type="checkbox">
+                                                        <label class="form-check-label">Paletizada</label>
+                                                    </div>
+
+                                                    <div class="form-check">
+                                                        <input id="customRadio2" class="form-check-input"
+                                                            type="checkbox">
+                                                        <label class="form-check-label">Fracionada</label>
+                                                    </div>
+                                                     -->
+
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio1" name="customRadio" checked>
+                                                        <label for="customRadio1"
+                                                            class="custom-control-label">Paletizada</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio2" name="customRadio">
+                                                        <label for="customRadio2"
+                                                            class="custom-control-label">Fracionada</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label>Status</label>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="statusAgendado" name="customRadio2" checked>
+                                                        <label for="statusAgendado"
+                                                            class="custom-control-label">Agendado</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="statusAguardando" name="customRadio2">
+                                                        <label for="statusAguardando"
+                                                            class="custom-control-label">Aguardando</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <label>Carregamento</label>
+                                                    <div class="form-check">
+                                                        <input id="gestao" class="form-check-input"
+                                                            type="checkbox">
+                                                        <label class="form-check-label">Gestão</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3" hidden>
+                                                <div class="form-group" style="padding-top: 32px;">
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio3" name="customRadio">
+                                                        <label for="customRadio3" class="custom-control-label">Carga
+                                                            Batida</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input class="custom-control-input" type="radio"
+                                                            id="customRadio4" name="customRadio">
+                                                        <label for="customRadio4"
+                                                            class="custom-control-label">Chep\Outros</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-7">
+                                                <div class="form-group">
+                                                    <label for="txtObs">Observações NFe</label>
+                                                    <textarea style="height: 124px;" id="txtObs" class="form-control"
+                                                        placeholder=""></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label>Horário da Coleta</label>
+                                                    <div class="input-group date" id="horarioColeta"
+                                                        data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input"
+                                                            data-target="#horarioColeta">
+                                                        <div class="input-group-append" data-target="#horarioColeta"
+                                                            data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Horário da Entrega</label>
+                                                    <div class="input-group date" id="horarioEntrega"
+                                                        data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input"
+                                                            data-target="#horarioEntrega">
+                                                        <div class="input-group-append" data-target="#horarioEntrega"
+                                                            data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="card-body">
+                                                <table id="example2" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Pedido</th>
+                                                            <th>Cod</th>
+                                                            <th style="width: 200px">Cliente</th>
+                                                            <th>UF</th>
+                                                            <th>Cidade</th>
+                                                            <th>Agrupamento</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="itens2">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="row">
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="txtIdCliente">Cod.</label>
+                          <input type="text" name="Cod." class="form-control" id="txtIdCliente" placeholder="">
+                        </div>
+                      </div>
+                      <div class="col-md-10">
+                        <div class="form-group">
+                          <label for="txtCliente">Cliente</label>
+                          <input type="text" name="Nome" class="form-control" id="txtCliente" placeholder="Nome">
+                        </div>
+                      </div>
+                    </div> -->
+
+                                        <!-- /.card-body -->
+                                        <div class="card-footer" style="text-align: right; background-color: white;">
+                                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                        </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <!-- <script src="../../../plugins/jquery/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- fullCalendar 2.2.5 -->
+    <script src="../../../plugins/moment/moment.min.js"></script>
+    <script src="../../../plugins/fullcalendar/main.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="https://rawgit.com/tempusdominus/bootstrap-4/master/build/js/tempusdominus-bootstrap-4.js"></script>
+    <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+    <!-- Bootstrap 4 -->
+    <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="../../../plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../../plugins/jszip/jszip.min.js"></script>
+    <script src="../../../plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../../plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- jquery-validation -->
+    <script src="../../../plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="../../../plugins/jquery-validation/additional-methods.min.js"></script>
+
+    <!-- <script src="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/select/1.2.1/css/select.dataTables.min.css"></script> -->
+    <script src="https://cdn.datatables.net/select/1.2.1/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="select.css">
+
+    <!-- AdminLTE App -->
+    <script src="../../../dist/js/adminlte.min.js"></script>
+
+
+
+    <!-- AdminLTE for demo purposes -->
+    <!-- <script src="../../../dist/js/demo.js"></script> -->
+    <!-- Page specific script -->
+    <!-- Select2 -->
+    <script src="../../../plugins/select2/js/select2.full.min.js"></script>
+    <script>
+        $('.select2bs4Trans').select2({
+            theme: 'bootstrap4'
+        })
+    </script>
+    <style>
+        table.dataTable td {
+            font-size: 14px;
+        }
+
+        table.dataTable th {
+            font-size: 14px;
+        }
+
+        thead,
+        th {
+            text-align: left;
+        }
+
+        .table td,
+        .table th {
+            padding: 3px !important;
+            /* padding: .2rem !important;       */
+        }
+
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+        }
+
+        /* .modal-body {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+    } */
+
+        .modal-dialog {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .modal-content {
+            height: auto;
+            min-height: 100%;
+            border-radius: 0;
+        }
+
+        .modal {
+            padding-right: 0px !important;
+        }
+
+        textarea {
+            text-transform: uppercase;
+        }
+    </style>
+    <!-- <script src="ajax.js"></script> -->
+    <!-- <script src="select.js"></script> -->
+    <script src="../../../src/const.js"></script>
+    <script src="./mask.js"></script>
+    <script src="index.js"></script>
+
+</body>
+
+</html>
