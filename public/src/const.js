@@ -1,6 +1,5 @@
-//_BASE_URL = 'http://192.168.1.140:8085/'
-//_BASE_URL = 'http://localhost:8087/'
-_BASE_URL = 'http://webservice.grupomariza.com.br:8085/'
+// _BASE_URL = 'http://webservice.grupomariza.com.br:8085/'
+_BASE_URL = 'http://localhost:8087/'
 _EP_LOGIN = 'api/v1/auth/login'
 _EP_PROFILE = 'api/v1/auth/profile'
 _EP_ESTOQUE = 'api/v1/estoque/getEstoqueProdutos'

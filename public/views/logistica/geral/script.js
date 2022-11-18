@@ -298,6 +298,8 @@ function openLiqui(liq) {
     $('#txtIdLiquidacao').text(liq)
     $('#modal-coleta').modal('show');
 
+
+
     document.getElementById('editTransportadora').value = ''
     $('#editTransportadora').attr('hidden', 'true');
 
@@ -310,50 +312,21 @@ function openLiqui(liq) {
     document.getElementById('statusAgendado').checked = true
 
     //Date and time picker
-    // $('#horarioColeta').datetimepicker({
-    //     icons: {
-    //         time: 'far fa-clock'
-    //     },
-    //     date: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
-    //     locale: 'pt-br'
-    // });
+    $('#horarioColeta').datetimepicker({
+        icons: {
+            time: 'far fa-clock'
+        },
+        date: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
+        locale: 'pt-br'
+    });
 
-    // $('#horarioEntrega').datetimepicker({
-    //     icons: {
-    //         time: 'far fa-clock'
-    //     },
-    //     date: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
-    //     locale: 'pt-br'
-    // });
-
-    document.getElementById('datasHorarios').innerHTML = `
-        <div class="form-group">
-            <label>Horário da Coleta</label>
-            <div class="input-group date" id="horarioColeta"
-                data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input"
-                    data-target="#horarioColeta">
-                <div class="input-group-append" data-target="#horarioColeta"
-                    data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Horário da Entrega</label>
-            <div class="input-group date" id="horarioEntrega"
-                data-target-input="nearest">
-                <input type="text" class="form-control datetimepicker-input"
-                    data-target="#horarioEntrega">
-                <div class="input-group-append" data-target="#horarioEntrega"
-                    data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `
+    $('#horarioEntrega').datetimepicker({
+        icons: {
+            time: 'far fa-clock'
+        },
+        date: moment(new Date()).hours(0).minutes(0).seconds(0).milliseconds(0),
+        locale: 'pt-br'
+    });
 
     $('#txtPlaca').val('');
     $('#txtMotorista').val('');
@@ -368,57 +341,20 @@ function openLiqui(liq) {
 
 
             if (res.length) {
-
-                let optFrete = document.getElementById("optFrete");
-                let optCidade = document.getElementById('optCidade')
-                let frete = optFrete.options[optFrete.selectedIndex].value;
-                let optTransportadoras = document.getElementById("optTransportadoras");
-
-                if (res[0].LIQU_FRETE_C_F == 'C') {
-                    document.getElementById('optFrete').value = 'CIF'
-                    document.getElementById('optTransportadoras').disabled = false
-                    optCidade.disabled = true
-                    $('#editTransportadora').attr('hidden', 'true');
-                } else {
-                    document.getElementById('optFrete').value = 'FOB'
-                    optCidade.disabled = false
-                    $('#editTransportadora').attr('hidden', 'true');
-                }
-                // changeFrete()
-
-                $('#horarioColeta').datetimepicker({
-                    icons: {
-                        time: 'far fa-clock'
-                    },
-                    date: moment(res[0].DTA_COLETA),
-                    locale: 'pt-br'
-                });
-
-                $('#horarioEntrega').datetimepicker({
-                    icons: {
-                        time: 'far fa-clock'
-                    },
-                    date: moment(res[0].DTA_ENTREGA),
-                    locale: 'pt-br'
-                });
-
                 copy_cli = res[0].PEDF_CLI_ID
-                // getCidadeCliente(copy_cli)
+                getCidadeCliente(copy_cli)
                 $('#txtVlrFrete').val(res[0].FRETE.toFixed(2))
                 $('#txtPlaca').val(res[0].LIQU_PLACA_TRANSP)
                 $('#txtMotorista').val(res[0].PEDL_NOME_MOTORISTA)
                 $('#example2').dataTable().fnDestroy();
 
-                $("#optCidade").val(res[0].LIQU_GEN_ID_CID_TRANSP_DE).trigger('change');
-
-                document.getElementById('select2-optTransportadoras-container').innerHTML = res[0].LIQU_NOME_TRANSP
-                document.getElementById('optTransportadoras').selectedIndex = res[0].LIQU_FRO_ID
-                $("#optTransportadoras").val(res[0].LIQU_FRO_ID).trigger('change');
-
                 res[0].LIQU_GESTAO = 'S' ? document.getElementById('gestao').checked = true : document.getElementById('gestao').checked = false
 
-
-
+                if (res[0].LIQU_FRETE_C_F == 'C') {
+                    document.getElementById('optFrete').value = 'CIF'
+                } else {
+                    document.getElementById('optFrete').value = 'FOB'
+                }
 
                 if (res[0].PEDL_TIPO_CARGA == 1) {
                     document.getElementById('customRadio1').checked = true
@@ -461,6 +397,7 @@ function openLiqui(liq) {
 
                 $('#example2').DataTable().draw();
 
+                changeFrete()
 
                 $('#modal-coleta').modal('show');
 

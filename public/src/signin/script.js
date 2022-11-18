@@ -11,7 +11,6 @@ $('#signin').submit(function (e) {
     }
 
     ajax(_BASE_URL + _EP_LOGIN, 'POST', json, function (res) {
-        console.log('sp[ider');
         console.log(res)
         if (res.accessToken) {
             localStorage.setItem('user', JSON.stringify(res))

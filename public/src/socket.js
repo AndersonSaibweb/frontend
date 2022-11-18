@@ -4188,4 +4188,4 @@
 }));
 //# sourceMappingURL=socket.io.js.map
 
-const socket = io.connect('http://192.168.1.140:8085');
+const socket = io.connect('http://webservice.grupomariza.com.br:8085');
