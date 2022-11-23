@@ -132,6 +132,11 @@ getAll = () => {
   let url = "";
   const dataAtual = moment().format("DD/MM/YYYY");
   const dataFinal = $('input[name="dateFilter"]');
+  const produto = $("#descriptionFilter")[0]?.value;
+  let idProduto;
+  if (produto) {
+    idProduto = produto.split("-")[0].trim();
+  }
 
   const dataFinal_ = moment(
     dataFinal.data("daterangepicker")?.endDate?._d
@@ -140,11 +145,21 @@ getAll = () => {
   const dataFiltro = dataFinal_ ? dataFinal_ : dataAtual;
 
   url = `api/v1/estoque/getEstoqueProdutos?dataFinal=${dataFiltro}`;
+  if (idProduto) {
+    url += `&idProduto=${idProduto}`;
+  }
 
-  ajax(_BASE_URL + url, "GET", {}, function (res_) {
+  console.log("url", url);
+
+  ajax("http://localhost:8087/" + url, "GET", {}, function (res_) {
     table.data = res_;
     table.generate();
-    table.adicionaFilterElementOnDOM(dataFiltro);
+
+    if (res_?.length) {
+      table.adicionaFilterElementOnDOM(dataFiltro);
+      table.adicionaFilterProductElementOnDOM("");
+    }
+
     // response(table.adicionaFilterElementOnDOM());
   });
 
@@ -169,11 +184,10 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 (async () => {
-  getAll().then(() => {
-    // table.adicionaFilterElementOnDOM();
-    // alert();
-    // table.adicionaFilterElementOnDOM();
-  });
+  getAll();
+  // table.adicionaFilterElementOnDOM();
+  // alert();
+  // table.adicionaFilterElementOnDOM();
   // setTimeout(() => {
   // }, 3000);
   // while (true) {

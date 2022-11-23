@@ -64,8 +64,6 @@ class Table {
     if (_this.columns) {
       let option = ``;
       let selectedValues = [];
-      // console.log(_this.columns)
-      // console.log(_this.filtersDefault)
       _this.columns.forEach((element) => {
         let hide = false;
         _this.hide.forEach((hidden) => {
@@ -104,7 +102,6 @@ class Table {
                 `;
       $(_this.filters).html(div);
       $(".select2").select2();
-      // console.log(selectedValues)
       $(".select2").val(selectedValues).change();
     }
   }
@@ -263,7 +260,6 @@ class Table {
   }
 
   adicionaFilterElementOnDOM(data) {
-    console.log("data", data);
     const containerInputDate = `
     <div id="container-dateFilter" class="col-md-3" >
     <div class="form-group">
@@ -291,8 +287,6 @@ class Table {
       display: "flex",
       "justify-content": "flex-end",
     });
-
-    // console.log($('input[name="dateFilter"]')[0].value);
 
     $(function () {
       $('input[name="dateFilter"]').daterangepicker({
@@ -326,6 +320,124 @@ class Table {
         firstDay: 0,
       });
     });
+  }
+
+  adicionaFilterProductElementOnDOM(data) {
+    function ocultaListaProdutos(oculta) {
+      $("#OlProdutos").attr("hidden", oculta);
+    }
+
+    function definirOpcoesProdutos(listaProdutos) {
+      const opcoesProdutos = $("#OlProdutos");
+
+      if (!listaProdutos?.length) {
+        $(opcoesProdutos).empty();
+        return;
+      }
+      listaProdutos.forEach((produto) => {
+        // <option>${produto.CODIGO} - ${produto.RAZAO_SOCIAL}</option>
+        const data = `${produto.CODIGO} - ${produto.DESCRICAO}`;
+        $(opcoesProdutos).append(`
+          <li class="produto" value=${produto.CODIGO}>${data}</li>
+        `);
+      });
+
+      $("#descriptionFilter").focusout(function () {
+        setTimeout(() => {
+          ocultaListaProdutos(true);
+        }, 200);
+      });
+
+      $("#OlProdutos li").hover(
+        function () {
+          $(this).css({
+            "background-color": "#c2c2c2",
+          });
+        },
+        function () {
+          $(this).css("background-color", "transparent");
+        }
+      );
+
+      $("#OlProdutos li").css({
+        "font-size": ".875rem",
+      });
+
+      $("#OlProdutos li").click(function defineValorInputFiltro() {
+        const produtoSelecionado = $(this)[0].innerHTML;
+        $("#descriptionFilter")[0].value = produtoSelecionado;
+        ocultaListaProdutos(true);
+      });
+    }
+
+    function getOptionsProdutos(filtro) {
+      if (!filtro) {
+        return;
+      }
+      $("#OlProdutos").empty();
+      let url = `api/v1/estoque/produtos?filtro=${filtro}`;
+      ajax("http://localhost:8087/" + url, "GET", {}, function (res_) {
+        definirOpcoesProdutos(res_);
+      });
+    }
+
+    const containerInputFilterProd = `
+      <div id="container-produtoFilter" class="col-md-3" >
+        <div class="form-group" >
+          <label for="produtoFilter">Produto:</label>
+            <input type="text" id="descriptionFilter"  class="form-control" />
+            <ol id="OlProdutos" style="width: auto;" data-sortOrder hidden>
+          </ol>
+        </div>
+      </div>
+    `;
+
+    // const inputDate = $("#dateFilter").clone(true);
+    // $(inputDate[0]).attr("hidden", false);
+    const divFilter = $("#example1_filter");
+    $("#example1_filter label:eq(0)").before(
+      `
+        ${containerInputFilterProd}
+      `
+    );
+
+    let timeOut;
+
+    $("#descriptionFilter").keyup(function (ev) {
+      if (timeOut) {
+        clearTimeout(timeOut);
+      }
+
+      timeOut = setTimeout(() => {
+        getOptionsProdutos(ev.target.value);
+        ocultaListaProdutos(false);
+      }, 500);
+    });
+
+    $("#descriptionFilter").css({
+      height: "calc(1.8125rem + 2px)",
+    });
+
+    $("#OlProdutos").css({
+      "list-style": "none",
+      cursor: "pointer",
+
+      "max-height": "100px",
+      "overflow-y": "auto",
+    });
+
+    $("#example1_filter").css({
+      display: "flex",
+      "justify-content": "flex-end",
+    });
+
+    // $("#produtoFilter").css({
+    //   height: "calc(1.8125rem + 2px)",
+    //   padding: "0.25rem 0.5rem",
+    //   fontSize: ".875rem",
+    //   "line-height": "1.5",
+    //   "border-radius": "0.2rem",
+    // });
   }
 
   generate() {
@@ -409,7 +521,6 @@ class Table {
               data: _this.nameCheck,
             });
           }
-          console.log(columns);
         }
 
         $(_this.nameTable).dataTable().fnDestroy();
@@ -454,7 +565,6 @@ class Table {
             rowGroup: {
               startRender: null,
               endRender: function (rows, group) {
-                console.log(group);
                 // converting to interger to find total
                 var intVal = function (i) {
                   return typeof i === "string"
@@ -465,7 +575,6 @@ class Table {
                 };
 
                 word = rows;
-                console.log(rows);
 
                 var api = $(_this.nameTable).dataTable().api();
                 var rowss = api.rows({ page: "all" }).nodes();
@@ -485,7 +594,6 @@ class Table {
                     _this.sum.forEach((s) => {
                       let group_assoc = group.replace(" ", "_");
                       group_assoc = group_assoc + "_" + s;
-                      // console.log(group_assoc);
                       if (typeof total_2[group_assoc] != "undefined") {
                         total_2[group_assoc] =
                           total_2[group_assoc] +
@@ -577,7 +685,6 @@ class Table {
 
             createdRow: function (row, data, dataIndex) {
               let indexRow = Object.keys(data);
-              console.log(data);
               indexRow.forEach((item, index) => {
                 if (
                   item != "EMBALAGEM" &&
@@ -593,18 +700,15 @@ class Table {
                   item == "SALDO - CARTEIRA"
                 ) {
                   if (parseFloat($("td", row).eq(index).html()) == 0) {
-                    console.log("mudar cor");
                     $("td", row).eq(index).css("background-color", "#ffff00a3");
                     //     $('td', row).eq(index).html(_this.case[nameAlter][data[nameAlter]])
                   }
                   if (parseFloat($("td", row).eq(index).html()) < 0) {
-                    console.log("mudar cor");
                     $("td", row).eq(index).css("background-color", "#ff6f6f8f");
                     //     $('td', row).eq(index).html(_this.case[nameAlter][data[nameAlter]])
                   }
 
                   if (parseFloat($("td", row).eq(index).html()) > 0) {
-                    console.log("mudar cor");
                     $("td", row).eq(index).css("background-color", "#0fcd0f8a");
                     //     $('td', row).eq(index).html(_this.case[nameAlter][data[nameAlter]])
                   }
@@ -683,8 +787,6 @@ class Table {
           $("#example1_wrapper").css("padding-top", "20px");
 
           // setTimeout(() => {
-          console.log($("#example1_filter")[0].children[1]);
-          console.log($("#example1_filter")[0].children);
           // }, 3000);
           // setTimeout(() => {
           // this.adicionaFilterElementOnDOM();
@@ -723,9 +825,7 @@ class Table {
           if (_this.filtersDefault.length) {
             _this.createFilters();
           }
-        } catch (err) {
-          console.log(err.message);
-        }
+        } catch (err) {}
 
         let date = new Intl.DateTimeFormat([], _OPTIONS_DATE);
 
@@ -828,8 +928,6 @@ class Table {
         //     locale: 'pt-br'
         // });
       }
-
-      console.log(createField);
     });
   }
 }
