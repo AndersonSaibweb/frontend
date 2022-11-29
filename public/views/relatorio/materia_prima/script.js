@@ -107,7 +107,7 @@ getAll = () => {
     url += `?idProduto=${idProduto}`;
   }
 
-  ajax("http://localhost:8087/" + url, "GET", {}, function (res) {
+  ajax(_BASE_URL + url, "GET", {}, function (res) {
     table.data = res;
     table.generate();
 

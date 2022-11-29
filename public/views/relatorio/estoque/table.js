@@ -376,7 +376,7 @@ class Table {
       }
       $("#OlProdutos").empty();
       let url = `api/v1/estoque/produtos?filtro=${filtro}`;
-      ajax("http://localhost:8087/" + url, "GET", {}, function (res_) {
+      ajax(_BASE_URL + url, "GET", {}, function (res_) {
         definirOpcoesProdutos(res_);
       });
     }
