@@ -151,7 +151,7 @@ getAll = () => {
 
   console.log("url", url);
 
-  ajax("http://localhost:8087/" + url, "GET", {}, function (res_) {
+  ajax(_BASE_URL + url, "GET", {}, function (res_) {
     table.data = res_;
     table.generate();
 

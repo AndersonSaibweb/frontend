@@ -101,13 +101,14 @@ getAll = () => {
   let url = "api/v1/estoque/getKardexWeb";
 
   const produto = $("#descriptionFilterMatPrima")[0]?.value;
+  console.log("aaaaaaaaa", $("#select-type-product")[0]?.value);
   let idProduto;
   if (produto) {
     idProduto = produto.split("-")[0].trim();
     url += `?idProduto=${idProduto}`;
   }
 
-  ajax("http://localhost:8087/" + url, "GET", {}, function (res) {
+  ajax(_BASE_URL + url, "GET", {}, function (res) {
     table.data = res;
     table.generate();
 

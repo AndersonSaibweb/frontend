@@ -789,9 +789,19 @@ class Table {
       }
       $("#OlProdutosMatPrima").empty();
       console.log("filtro", filtro);
-      let url = `api/v1/estoque/produtos?filtro=${filtro}`;
-      ajax("http://localhost:8087/" + url, "GET", {}, function (res_) {
+      let url = `api/v1/estoque/produtos?tipo=1`;
+
+      $("#loading").removeAttr("hidden");
+
+      const tipoFiltro = $("#select-type-product")[0]?.value;
+      if (tipoFiltro === "1") {
+        url += `&codigo=${filtro}`;
+      } else {
+        url += `&descricao=${filtro}`;
+      }
+      ajax(_BASE_URL + url, "GET", {}, function (res_) {
         definirOpcoesProdutos(res_);
+        $("#loading").attr("hidden", "true");
       });
     }
 
@@ -801,18 +811,31 @@ class Table {
             <label for="produtoFilter">Produto:</label>
               <input type="text" id="descriptionFilterMatPrima"  class="form-control" />
               <ol id="OlProdutosMatPrima" style="width: auto;" data-sortOrder hidden>
-            </ol>
+              </ol>
           </div>
         </div>
       `;
 
+    const containerSelectTypeFilter = `
+      <div id="container-type-filter" class="col-md-2" >
+        <div class="form-group type-filter">
+          <label for="">Filtro por:</label>
+          <select class="form-control" id="select-type-product">
+            <option selected value="1">Código</option>
+            <option value="2">Descrição</option>
+          </select>
+        </div>
+      </div>
+   `;
+
     // const inputDate = $("#dateFilter").clone(true);
     // $(inputDate[0]).attr("hidden", false);
-    const divFilter = $("#example1_filter");
+
     $("#example1_filter label:eq(0)").before(
       `
-          ${containerInputFilterProd}
-        `
+        ${containerSelectTypeFilter}
+        ${containerInputFilterProd}
+      `
     );
 
     let timeOut;
@@ -825,7 +848,7 @@ class Table {
       timeOut = setTimeout(() => {
         getOptionsProdutos(ev.target.value);
         ocultaListaProdutos(false);
-      }, 500);
+      }, 600);
     });
 
     $("#descriptionFilterMatPrima").css({
@@ -843,6 +866,11 @@ class Table {
     $("#example1_filter").css({
       display: "flex",
       "justify-content": "flex-end",
+    });
+
+    $(".type-filter").css({
+      display: "flex",
+      gap: "10px",
     });
 
     // $("#produtoFilter").css({
