@@ -151,7 +151,7 @@ class Table {
     if (!_this.data.length) {
       return {
         result: false,
-        message: "url_get_all must be specified",
+        message: "Não foram encontrados dados para exibição",
       };
     }
 
@@ -452,6 +452,7 @@ class Table {
     $("#example1_filter").css({
       display: "flex",
       "justify-content": "flex-end",
+      "margin-top": "60px",
     });
 
     $(".type-filter").css({

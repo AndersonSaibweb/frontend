@@ -155,6 +155,7 @@ getAll = () => {
     table.data = res_;
     table.generate();
 
+    console.log("res_", res_);
     if (res_?.length) {
       table.adicionaFilterElementOnDOM(dataFiltro);
       table.adicionaFilterProductElementOnDOM("");
