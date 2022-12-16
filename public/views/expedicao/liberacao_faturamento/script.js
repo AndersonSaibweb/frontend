@@ -186,6 +186,10 @@ function get_all() {
 
 function definirOpcoesClientes(listaClientes) {
   const selectOpcoesClientes = $("#clientes");
+  $(selectOpcoesClientes).empty();
+  $(selectOpcoesClientes).append(`
+  <option> </option>
+`);
   listaClientes.forEach((cliente) => {
     // <option>${cliente.CODIGO} - ${cliente.RAZAO_SOCIAL}</option>
     $(selectOpcoesClientes).append(`
@@ -194,14 +198,25 @@ function definirOpcoesClientes(listaClientes) {
   });
 }
 
-function getClientes() {
+function getClientes(id_liquidacao) {
   const selectOpcoesClientes = $("#clientes");
 
-  ajax(_BASE_URL + "api/v1/expedicao/clientes", "GET", {}, function (clientes) {
-    if (clientes.length) {
-      definirOpcoesClientes(clientes);
+  // let linha = table[i].querySelectorAll("td");
+  // produtos.push({
+  //   prod_id: linha[0].innerHTML,
+  //   qtd_coleta: linha[2].innerHTML,
+  // });
+
+  ajax(
+    _BASE_URL + `api/v1/expedicao/clientes?idLiquidacao=${id_liquidacao}`,
+    "GET",
+    {},
+    function (clientes) {
+      if (clientes.length) {
+        definirOpcoesClientes(clientes);
+      }
     }
-  });
+  );
 
   $(selectOpcoesClientes).css({
     width: "100%",
@@ -403,6 +418,7 @@ function verificar_estoque(id = 0, id_liqui = 0) {
             Swal.close();
             $("#message2").html(`COLETA: ${id} | LQUIDAÇÃO: ${id_liqui}`);
             id_liquidacao = id_liqui;
+            getClientes(id_liqui);
             document.getElementById("secundario").removeAttribute("hidden");
             document.getElementById("principal").hidden = true;
 
