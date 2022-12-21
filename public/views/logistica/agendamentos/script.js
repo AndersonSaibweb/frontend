@@ -1237,6 +1237,7 @@ function atualizarStatusAgendamento(status) {
   if (!status || !["C", "D"].includes(status)) {
     return;
   }
+
   const data = {
     status: status === "C" ? 1 : 2,
     liqu_id: idLiquidacao,
