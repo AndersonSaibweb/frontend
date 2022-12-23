@@ -102,13 +102,35 @@
                       </tr>
                     </thead>
                     <tbody class="t-table" id="itens">
-
+                      
                     </tbody>
 
                     <tfoot>
                       <tr id="foot">
                       </tr>
                     </tfoot>
+                  </table>
+
+                  <table id="tablePedidosLiqu" class="table table-bordered table-striped">
+                    <!--dataTable-->
+                    <thead>
+                      <tr role="row" id="head">
+                        <!-- <td>Ação</td> -->
+                        <td>Cod. pedido</td>
+                        <td>Coleta</td>
+                        <td>Cliente</td>
+                        <td>Cidade</td>
+                        <td>UF</td>
+                      </tr>
+                    </thead>
+                    <tbody class="t-table" id="pedidos">
+                      
+                    </tbody>
+
+                    <!-- <tfoot>
+                      <tr id="foot">
+                      </tr>
+                    </tfoot> -->
                   </table>
                 </div>
                 <!-- /.card-body -->
@@ -197,9 +219,16 @@
 
               </div>
               <div class="col-sm-12">
+                <div class="form-group container-check-clientes" >
+                  <label for="checkboxCheckCliente">Selecionar cliente</label>
+                  <input type="checkbox" class="form-check-input" id="checkboxCheckCliente" 
+                    onchange="aoAlterarCheckSelecionarCheckCliente()"
+                  >
+                </div>
+
                 <div class="form-group">
-                  <label for="clientes">Clientes</label>
-                  <select autocomplete="on" id="clientes" class="custom-select" style="width: auto;" data-sortOrder>
+                  <!-- <label for="clientes">Clientes</label> -->
+                  <select autocomplete="on" id="clientes" hidden class="custom-select" style="width: 100%;" data-sortOrder>
                     <option selected value=""></option>
                   </select>
                   <!-- <input name="clientes" required="" autocomplete="off" type="number" class="form-control"
@@ -210,7 +239,7 @@
             </div>
           </div>
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="msgGerarPedido('', true)">Fechar</button>
             <button type="button" class="btn btn-primary" onclick="gerarPedido()">Gerar pedido</button>
           </div>
         </div>

@@ -1,4 +1,6 @@
 var id_liquidacao = 0;
+let listaLiquidacoes = [];
+let listaPedidosParaGerar = [];
 
 $(document).on("destroy.dt", function (e, settings) {
   var api = new $.fn.dataTable.Api(settings);
@@ -63,9 +65,61 @@ function principal() {
   document.getElementById("secundario").hidden = true;
 }
 
+function renderPedidos(idLiquidacao) {
+  const liquidacao = listaLiquidacoes.find(
+    (item) => item.LIQUIDACAO === idLiquidacao
+  );
+
+  obterListaPedidosPorIdLiquidacao(idLiquidacao);
+}
+
+function obterListaPedidosPorIdLiquidacao(idLiquidacao) {
+  if (!idLiquidacao) {
+    return;
+  }
+  let url = _BASE_URL + "api/v1/expedicao/pedidos";
+
+  url += `?idLiquidacao=${idLiquidacao}`;
+
+  ajax(url, "GET", {}, function (res) {
+    if (res.length) {
+      listaPedidosParaGerar = res;
+
+      definirPedidosDaLiquidacaoNaGrid(res);
+
+      $("#tablePedidosLiqu").css({
+        display: "table",
+      });
+    }
+  });
+}
+
+function definirPedidosDaLiquidacaoNaGrid() {
+  if (!listaPedidosParaGerar.length) {
+    return;
+  }
+
+  $("#pedidos").empty();
+
+  listaPedidosParaGerar.forEach((pedido) => {
+    let item = `<tr>
+                  <td class='itens'>${pedido["PEDIDO_FAT"]}</td>
+                  <td class='itens'>${pedido["COLETA"]}</td>
+                  <td class='itens'>${pedido["CLIENTE"]}</td>
+                  <td class='itens'>${pedido["CIDADE"]}</td>
+                  <td class='itens'>${pedido["UF"]}</td>
+                </tr> `;
+
+    $("#pedidos").append(item);
+  });
+}
+
 function get_all() {
   $("#loading").removeAttr("hidden");
   $("#message").text("Atualizando.. ");
+  $("#tablePedidosLiqu").css({
+    display: "none",
+  });
 
   principal();
 
@@ -78,6 +132,7 @@ function get_all() {
 
       $("#itens").html("");
       res.forEach((linha) => {
+        listaLiquidacoes = res;
         console.log("1");
 
         let cor = "#f77a7a82"; //Vermelha
@@ -95,8 +150,11 @@ function get_all() {
         if (linha["STATUS"] == "B") {
           dropMenu = `<a onclick='verificar_estoque(${linha["COLETA"]},${linha["LIQUIDACAO"]})' class='dropdown-item' href='#' data-widget='iframe-close' data-type='all'>Liberar Faturamento</a>`;
         }
+
         let item =
-          `<tr style='background-color:${cor}'>
+          `<tr style='background-color:${cor}' onclick="renderPedidos(${
+            linha["LIQUIDACAO"]
+          })">
                                 <td>
                                     <div onclick="fecharMenu()" class='nav-item dropdown'>
                                         <a   style='display: unset !important;' class='nav-link bg-info dropdown-toggle' data-toggle='dropdown' href='#' role='button' aria-haspopup='true' aria-expanded='false'></a>
@@ -167,7 +225,7 @@ function get_all() {
     $("#message").text("Atualizado " + date.format(new Date()));
     $("#loading").attr("hidden", "true");
   });
-  getClientes();
+  // getClientes();
 
   // $.ajax({
   //     type: "POST",
@@ -230,6 +288,17 @@ function gerarPedido() {
     : null;
   if (liqu == 0) return;
 
+  if (!listaPedidosParaGerar.length) {
+    return;
+  }
+
+  const data = {
+    idPedido: listaPedidosParaGerar[0].PEDIDO_FAT,
+    pallets: $("#txtPallets").val() || 0,
+    chapatex: $("#txtChapatex").val() || 0,
+    idCliente: Number(idCliente),
+  };
+
   if ($("#txtPallets").val() > 0 || $("#txtChapatex").val()) {
     Swal.fire({
       title: "Deseja confirmar a geração de Pedido?",
@@ -245,12 +314,7 @@ function gerarPedido() {
         ajax(
           _BASE_URL + "api/v1/expedicao/gerar_pedido",
           "POST",
-          {
-            liquidacao: liqu,
-            pallets: $("#txtPallets").val() || 0,
-            chapatex: $("#txtChapatex").val() || 0,
-            idCliente: Number(idCliente),
-          },
+          data,
           function (res) {
             console.log(res);
             if (res.status == 200) {
@@ -269,11 +333,15 @@ function gerarPedido() {
               $("#txtChapatex").val("");
               $("#clientes").val("");
               get_all();
+              listaPedidosParaGerar.shift();
+              msgGerarPedido(liqu);
             } else {
               Swal.fire("Algo deu errado!", res.message || 0, "error");
             }
           }
         );
+      } else {
+        msgGerarPedido(liqu);
       }
     });
   } else {
@@ -286,8 +354,30 @@ function gerar_palete(liqu = 0) {
 
   if (liqu == 0) return;
 
+  msgGerarPedido(liqu);
+}
+
+function msgGerarPedido(liqu, remPimeiroItemListaPedidos) {
+  if (remPimeiroItemListaPedidos) {
+    listaPedidosParaGerar.shift();
+  }
+
+  if (!listaPedidosParaGerar.length) {
+    principal();
+    return;
+  }
+
+  $(".container-check-clientes").css({
+    display: "flex",
+    "justify-content": "start",
+    "flex-direction": "row-reverse",
+    "margin-left": "20px",
+  });
+
   Swal.fire({
-    title: "Deseja gerar Pedido(Pallets/Chapatex)?",
+    title:
+      "Deseja gerar Pedido(Pallets/Chapatex) para o pedido " +
+      listaPedidosParaGerar[0].PEDIDO_FAT,
     text: "",
     icon: "warning",
     showCancelButton: true,
@@ -303,14 +393,18 @@ function gerar_palete(liqu = 0) {
       // $('#modal-default').modal('hide');
     } else {
       lib_fat();
+      listaPedidosParaGerar.shift();
+      if (!listaPedidosParaGerar.length) {
+        principal();
+        return;
+      }
+      msgGerarPedido(liqu);
     }
   });
 }
 
 function lib_fat(msg = true) {
   if (id_liquidacao) {
-    console.log(id_liquidacao);
-
     let produtos = [];
     let table = document
       .getElementById("example2")
@@ -327,7 +421,6 @@ function lib_fat(msg = true) {
       // console.log(linha[2].innerHTML) // QTD COLETA
     }
 
-    console.log(produtos);
     if (produtos.length) {
       ajax(
         _BASE_URL + "api/v1/expedicao/lib_fat",
@@ -337,7 +430,6 @@ function lib_fat(msg = true) {
           produtos: produtos,
         },
         function (res) {
-          console.log(res);
           if (res.status) {
             if (msg) {
               Swal.fire(
@@ -418,7 +510,7 @@ function verificar_estoque(id = 0, id_liqui = 0) {
             Swal.close();
             $("#message2").html(`COLETA: ${id} | LQUIDAÇÃO: ${id_liqui}`);
             id_liquidacao = id_liqui;
-            getClientes(id_liqui);
+            // getClientes(id_liqui);
             document.getElementById("secundario").removeAttribute("hidden");
             document.getElementById("principal").hidden = true;
 
@@ -522,4 +614,14 @@ function verificar_estoque(id = 0, id_liqui = 0) {
 
 function fecharMenu() {
   $("#menu.show").removeClass("show"); //Braboo
+}
+
+function aoAlterarCheckSelecionarCheckCliente() {
+  const selecionarCliente = $("#checkboxCheckCliente")[0].checked;
+
+  if (selecionarCliente) {
+    getClientes();
+
+    $("#clientes").removeAttr("hidden");
+  }
 }
