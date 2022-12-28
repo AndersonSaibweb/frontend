@@ -1234,7 +1234,7 @@ $("#modal-associar").on("shown.bs.modal", function (event) {
 });
 
 function atualizarStatusAgendamento(status) {
-  if (!status || !["C", "D"].includes(status)) {
+  if (!status || !["C", "E"].includes(status)) {
     return;
   }
 
