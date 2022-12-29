@@ -1234,12 +1234,12 @@ $("#modal-associar").on("shown.bs.modal", function (event) {
 });
 
 function atualizarStatusAgendamento(status) {
-  if (!status || !["C", "E"].includes(status)) {
+  if (!status || !["C", "E", "F"].includes(status)) {
     return;
   }
 
   const data = {
-    status: status === "C" ? 1 : 2,
+    status: status === "C" ? 1 : status === "E" ? 2 : 6,
     liqu_id: idLiquidacao,
   };
 
