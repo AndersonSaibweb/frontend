@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Realizado</title>
 
-    <!-- <script src="../../../src/socket.js"></script> -->
+    <script src="../../../src/socket.js"></script>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -49,7 +49,9 @@
 -->
 
 <body class="hold-transition sidebar-collapse">
-    <div class="wrapper">
+  <div class="wrapper">
+        
+   
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -231,14 +233,97 @@
             </div>
         </div>
 
+       
+
+        <div class="modal fade" id="modal-default2" style="display: none;" aria-hidden="true">
+          <!-- <div class="modal-dialog modal-lg"> -->
+          <div class="modal-dialog modal-md">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal2"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding: 0px;">
+    
+                <div class="card card-primary card-outline card-outline-tabs">
+                  <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" id="custom-tabs-four-detalhes-tab" data-toggle="pill"
+                          href="#custom-tabs-four-detalhes" role="tab" aria-controls="custom-tabs-four-detalhes"
+                          aria-selected="true">
+                          <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Detalhes</font>
+                          </font>
+                        </a>
+                      </li>
+                      
+                    </ul>
+                  </div>
+                  <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-four-tabContent">
+                      <div class="tab-pane fade active show" id="custom-tabs-four-detalhes" role="tabpanel"
+                        aria-labelledby="custom-tabs-four-detalhes-tab">
+                        <div class="row">
+                          <div class="col-md-12">
+                        
+                            <div id="divRegistrar" style="padding: 15px;">
+    
+                              <div class="form-group">
+                                <label>Status</label>
+                                <select required id="optStatus" class="form-control" onchange="verify()">
+                                  <option value="">--Selecione--</option>
+                                  <option value="3">NO CLIENTE</option>
+                                  <option value="4">PARADO</option>
+                                  <option value="6">OCORRENCIA</option>
+                                </select>
+                              </div>
+    
+                             
+                              <div hidden id="optOcorrenciasGroup" class="form-group">
+                                <label>Ocorrências</label>
+                                <select required id="optOcorrencias" hidden onchange="changeFunc();"
+                                  class="form-control select2bs4 select2-accessible" style="width: 100%;"
+                                  tabindex="-1" aria-hidden="true">
+                                  <option selected value="">--Selecione--</option>
+                                </select>
+                              </div>
+    
+                              <label id="txtObs">Observação</label>
+                              <textarea style="height: 70px;" id="txtNovaMensagem" class="form-control"
+                                placeholder="Observação"></textarea>
+                              <div style="text-align: right; padding-top: 5px;">
+                                <button id="btnRegistro" onclick="registrar()" type="button"
+                                  class="btn btn-primary">Registrar</button>
+                              </div>
+                            
+    
+                            
+                            </div>
+    
+                          </div>
+                          <!-- /.col -->
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="modal fade" id="modal-coleta" style="display: none; color: black !important;"
             class=aria-hidden="true">
             <div class="modal-dialog modal-xl" style="max-width: 5800px !important;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Liquidação: <b id="txtIdLiquidacao"></b></h4>
-                        <button type="button" class="close" data-dismiss="mod   al" aria-label="Close">
-                            <span aria-hidden="true">×</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -465,6 +550,11 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+
+
+       
+
+        
 
         <!-- jQuery -->
         <!-- <script src="../../../../plugins/jquery/jquery.min.js"></script> -->

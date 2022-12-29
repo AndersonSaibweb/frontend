@@ -1,3 +1,5 @@
+var idLiquidacao = 0;
+var idOcorrecia = 0;
 function dataAnteriorFormatada(dt) {
   var data = new Date(dt),
     dia = data.getDate().toString().padStart(2, "0"),
@@ -12,6 +14,9 @@ function dataAnteriorFormatada(dt) {
 }
 var id_liquidacao = 0;
 var copy_cli = 0;
+var insert = false;
+var selecionados = [];
+
 $(document).on("destroy.dt", function (e, settings) {
   var api = new $.fn.dataTable.Api(settings);
   api.off("order.dt");
@@ -32,6 +37,28 @@ function principal() {
   id_liquidacao = 0;
   document.getElementById("principal").removeAttribute("hidden");
   document.getElementById("secundario").hidden = true;
+}
+
+function openModalAlterarStatus() {
+  $("#modal-default2").modal("show");
+}
+
+function aoClicarCard(statusLiq, idLiquidacao_) {
+  // console.log("liquidacao", liquidacao);
+  idLiquidacao = idLiquidacao_;
+  const listaStatusSemClick = ["CARREGANDO", "FINALIZADO"];
+  const listaStatusModalLiberarPedido = ["AGUARDANDO AGENDA"];
+
+  if (!statusLiq || listaStatusSemClick.includes(statusLiq)) {
+    return;
+  }
+
+  if (listaStatusModalLiberarPedido.includes(statusLiq)) {
+    openLiqui(idLiquidacao_);
+    return;
+  }
+
+  openModalAlterarStatus();
 }
 
 function get_all() {
@@ -62,11 +89,10 @@ function get_all() {
           }
           if (!document.getElementById(item.LIQU_ID)) {
             document.getElementById(item.STATUS).innerHTML += `
-                            <li class="drag-item" id="${
-                              item.LIQU_ID
-                            }" ondblclick="${
-              item.STATUS && !listaStatusSemClick.includes(item.STATUS)
-            } && openLiqui('${item.LIQU_ID}')">
+                            <li class="drag-item" id="${item.LIQU_ID}"
+                            ondblclick="aoClicarCard('${item.STATUS}', '${
+              item.LIQU_ID
+            }')">
                                 <div style="padding: 5px 0px 0px 5px; color: rgb(61, 81, 129);">
                                     <div class="col-12">
                                         <div class="row">
@@ -163,138 +189,386 @@ function get_all() {
   );
 }
 
-submitHandler = function (ev) {
-  console.log(document.getElementById("customRadio1"));
-  if (
-    !document.getElementById("customRadio1").checked &&
-    !document.getElementById("customRadio2").checked
-  ) {
-    alerta("Selecione o tipo de carga.");
+$.validator.setDefaults({
+  submitHandler: function () {
+    if (
+      !document.getElementById("customRadio1").checked &&
+      !document.getElementById("customRadio2").checked
+    ) {
+      alerta("Selecione o tipo de carga.");
+      return;
+    }
+
+    if (!insert) {
+      insert = true;
+      let json = {};
+
+      // json['FRETE'] = document.getElementById("optFrete").options[document.getElementById("optFrete").selectedIndex].innerText;
+
+      let optTransportadoras = document.getElementById("optTransportadoras");
+      let nomeTransportadora = "";
+      optTransportadoras.options[optTransportadoras.selectedIndex].innerText
+        .split("-")
+        .forEach((item, i) => {
+          if (i == 1) {
+            nomeTransportadora += item;
+          }
+          if (i > 1) {
+            nomeTransportadora += "-" + item;
+          }
+        });
+
+      let linhaPedidos = document
+        .getElementById("itens2")
+        .querySelectorAll("tr");
+      const pedidos = linhaPedidos[0];
+      console.log("pedidos", linhaPedidos.NodeList);
+
+      let pedidos_ = "";
+      const idCliente = pedidos.querySelectorAll("td")[1].innerText;
+
+      linhaPedidos.forEach((pedido, indexP) => {
+        pedido.querySelectorAll("td").forEach((item, index) => {
+          if (indexP > 0 && index === 0) {
+            pedidos_ += ", " + item.innerText;
+            return;
+          }
+          if (index === 0) {
+            pedidos_ = item.innerText;
+          }
+        });
+      });
+
+      console.log("idCliente", idCliente);
+      console.log("pedidos_", pedidos_);
+
+      // check.length &&
+      //   check.forEach((item) => {
+      //     if (
+      //       item.querySelector(".select-checkbox") != null &&
+      //       item.querySelector(".select-checkbox") != undefined
+      //     ) {
+      //       console.log("item", item);
+      //       //selecionados.push(item.cells[1].innerText)
+      //       selecionados.push(item.cells);
+      //     }
+      //   });
+
+      switch (document.getElementById("optFrete").value) {
+        case "FOB":
+          json["ID_TRANSPORTADORA"] =
+            optTransportadoras.options[optTransportadoras.selectedIndex].value; //1;
+          json["TRANSPORTADORA"] = nomeTransportadora; //selecionados[0][5].innerText
+          break;
+
+        case "CIF":
+          json["ID_TRANSPORTADORA"] =
+            optTransportadoras.options[optTransportadoras.selectedIndex].value;
+          json["TRANSPORTADORA"] = nomeTransportadora;
+          break;
+
+        case "FOB-EDIT":
+          json["ID_TRANSPORTADORA"] =
+            optTransportadoras.options[optTransportadoras.selectedIndex].value;
+          json["TRANSPORTADORA"] =
+            document.getElementById("editTransportadora").value;
+          break;
+
+        default:
+          break;
+      }
+
+      try {
+        json["ID_LIQUIDACAO"] =
+          document.getElementById("txtIdLiquidacao").innerText;
+        json["ID_CIDADE_TRANSP"] =
+          optCidade.options[optCidade.selectedIndex].value;
+        json["CIDADE"] = optCidade.options[optCidade.selectedIndex].innerText;
+        json["PLACA"] = document.getElementById("txtPlaca").value;
+        json["MOTORISTA"] = document.getElementById("txtMotorista").value;
+        json["CARGA_PALETIZADA"] =
+          document.getElementById("customRadio1").checked;
+        json["CARGA_FRACIONADA"] =
+          document.getElementById("customRadio2").checked;
+        json["CARGA_BATIDA"] = document.getElementById("customRadio3").checked;
+        json["CARGA_OUTROS"] = document.getElementById("customRadio4").checked;
+        json["STATUS"] = document.getElementById("statusAgendado").checked
+          ? "AGENDADO"
+          : "AGUARDANDO";
+        json["GESTAO"] = document.getElementById("gestao").checked ? "S" : "N";
+        json["OBS_NFE"] = document.getElementById("txtObs").value.toUpperCase();
+        json["HORARIO_COLETA"] = $("#horarioColeta").find("input").val();
+        json["HORARIO_ENTREGA"] = $("#horarioEntrega").find("input").val();
+        json["FRETE"] = document.getElementById("optFrete").value;
+        json["ID_CLIENTE"] = idCliente;
+        json["VLR_FRETE"] = document.getElementById("txtVlrFrete").value;
+
+        // let pedidos = selecionados[0][1].innerText;
+        // selecionados.forEach((LIQU_ID) => {
+        //   if (pedidos != LIQU_ID[1].innerText) {
+        //     pedidos += "," + LIQU_ID[1].innerText;
+        //   }
+        // });
+
+        json["PEDIDOS"] = pedidos_;
+      } catch (error) {
+        console.log("error", error);
+      }
+
+      console.log(json);
+
+      Swal.fire({
+        title: "Deseja confirmar coleta?",
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Confirmar",
+        denyButtonText: `Cancelar`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          if (JSON.parse(localStorage.getItem("user")) != null) {
+            ajax(
+              _BASE_URL + _EP_GERAR_COLETA,
+              "POST",
+              json,
+              async function (res) {
+                console.log(res);
+
+                if (res.status == 200) {
+                  // socket.emit("alteracaoControle", true);
+                  get_all();
+                  $("#modal-coleta").modal("hide");
+                  Swal.fire({
+                    icon: "success",
+                    title:
+                      res.message +
+                      " " +
+                      document.getElementById("txtIdLiquidacao").innerText,
+                    text: "",
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "error",
+                    title: res.message,
+                    text: "",
+                  });
+                }
+                insert = false;
+              },
+              JSON.parse(localStorage.getItem("user")).accessToken
+            );
+          }
+        } else {
+          insert = false;
+        }
+      });
+    }
+  },
+});
+
+$("#quickForm").validate({
+  rules: {
+    txtPlaca: {
+      required: true,
+      maxlength: 10,
+    },
+    txtMotorista: {
+      required: true,
+    },
+    txtVlrFrete: {
+      required: true,
+    },
+  },
+  messages: {
+    txtPlaca: {
+      required: "Insira placa",
+      maxlength: "Max. 10 Caracteres",
+      //   email: "Please enter a vaild email address",
+      //   minlength: "Preencha no mínimo 5 caracteres",
+      //   maxlength: "Máximo 10 caracteres"
+    },
+    txtMotorista: {
+      required: "Insira nome do motorista",
+    },
+
+    editTransportadora: {
+      required: "Insira nome da transportadora",
+    },
+
+    txtVlrFrete: {
+      required: "Valor do frete",
+    },
+
+    // terms: "Por favor aceite o Termos de Uso"
+  },
+  errorElement: "span",
+  errorPlacement: function (error, element) {
+    error.addClass("invalid-feedback");
+    element.closest(".form-group").append(error);
+  },
+  highlight: function (element, errorClass, validClass) {
+    $(element).addClass("is-invalid");
+  },
+  unhighlight: function (element, errorClass, validClass) {
+    $(element).removeClass("is-invalid");
+  },
+});
+
+function changeFunc() {
+  let optOcorrencias = document.getElementById("optOcorrencias");
+  idOcorrecia = optOcorrencias.options[optOcorrencias.selectedIndex].value;
+}
+
+getOcorrecias();
+
+function getOcorrecias(seleciona = 0) {
+  if (JSON.parse(localStorage.getItem("user")) != null) {
+    ajax(
+      _BASE_URL + _EP_GET_ALL_OCORRENCIAS,
+      "GET",
+      {},
+      function (grus) {
+        console.log(grus);
+        let optOcorrencias = document.getElementById("optOcorrencias");
+        let optionsGrus = '<option selected value="0">--Selecione--</option>';
+        for (let i in grus) {
+          optionsGrus += `<option value="${grus[i].OCOR_ID}">${grus[i].OCOR_DESCRICAO}</option>`;
+        }
+        $("#optOcorrencias").children().remove();
+        $("#optOcorrencias").append(optionsGrus);
+
+        let arroptOcorrencias = optOcorrencias.options;
+        for (let i = 0; i < arroptOcorrencias.length; i++) {
+          if (arroptOcorrencias[i].value == seleciona) {
+            console.log("seleção");
+            optOcorrencias.selectedIndex = i;
+          }
+        }
+      },
+      JSON.parse(localStorage.getItem("user")).accessToken
+    );
+  }
+  // } else {
+  //     let optionsGrus = '<option selected value="">--Selecione--</option>';
+  //     $('#optOcorrencias').children().remove();
+  //     $('#optOcorrencias').append(optionsGrus);
+  // }
+}
+
+const ocorrencias = {
+  AGENDADO: 0,
+  CARREGANDO: 1,
+  "EM TRANSITO": 2,
+  "NO CLIENTE": 3,
+  PARADO: 4,
+  FINALIZADO: 5,
+  OCORRENCIA: 6,
+  "AGUARDANDO AGENDA": 9,
+};
+
+verify = () => {
+  var x = document.getElementById("optStatus").value;
+  if (x == "6") {
+    try {
+      document.getElementById("select2-optOcorrencias-container").innerText =
+        "--Selecione--";
+    } catch (e) {}
+    try {
+      document.getElementById("optOcorrencias").selectedIndex = 0;
+    } catch (e) {}
+    $("#optOcorrenciasGroup").removeAttr("hidden");
+    $("#optOcorrencias").removeAttr("hidden");
+    // obrigatorio.push("optOcorrencias");
+    let x = document.getElementById("btnRegistro").offsetTop;
+    console.log(x);
+    // $('#modal-default2 .modal-body').scrollTop(x - 30);
+  } else {
+    // if (obrigatorio.includes("txtCpfMotorista")) {
+    // obrigatorio = ["optStatus", "txtCpfMotorista"];
+    // } else {
+    // obrigatorio = ["optStatus"];
+    // }
+
+    $("#optOcorrenciasGroup").attr("hidden", "true");
+    $("#optOcorrenciasGroup").attr("hidden", "true");
+  }
+};
+
+registrar = () => {
+  console.log(obrigatorio);
+  if (validarCamposInputs(obrigatorio)) {
+    if (
+      !validaCnpjCpf(document.getElementById("txtCpfMotorista").value) &&
+      obrigatorio.includes("txtCpfMotorista")
+    ) {
+      document.getElementById(
+        "txtCpfMotorista"
+      ).style = `border: 1px solid #ff0000;`;
+      Swal.fire({
+        icon: "error",
+        title: "CPF Inválido!",
+        text: "Verifique os dígitos",
+      });
+      return;
+    }
+
+    console.log(idLiquidacao);
+    console.log(idColeta);
+    aaaa = document.getElementById("optStatus").value;
+
+    if (document.getElementById("optStatus").value == "") return;
+
+    let json = {};
+    json["idLiquidacao"] = idLiquidacao;
+    json["idColeta"] = idColeta;
+    json["status"] = document.getElementById("optStatus").value;
+    json["obs"] = document.getElementById("txtNovaMensagem").value;
+    json["idOcorrecia"] = idOcorrecia;
+
+    if (JSON.parse(localStorage.getItem("user")) != null && !request) {
+      ajax(
+        _BASE_URL + _EP_POST_CDTR_LOG_AGENDAMENTOS,
+        "POST",
+        json,
+        function (res) {
+          if (res.status == 200) {
+            //atualizarTabela()
+            obrigatorio = ["optStatus"];
+            $("#modal-default2").modal("hide");
+            document.getElementById("txtCpfMotorista").value = "";
+            socket.emit("alteracaoControle", true);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Falha a salvar!",
+              text: "",
+            });
+          }
+        },
+        JSON.parse(localStorage.getItem("user")).accessToken
+      );
+    }
+  }
+};
+
+function atualizarStatusAgendamento(status) {
+  if (!status) {
     return;
   }
 
-  if (!insert) {
-    insert = true;
-    let json = {};
+  const data = {
+    status: status,
+    liqu_id: idLiquidacao,
+  };
 
-    // json['FRETE'] = document.getElementById("optFrete").options[document.getElementById("optFrete").selectedIndex].innerText;
-
-    let optTransportadoras = document.getElementById("optTransportadoras");
-    let nomeTransportadora = "";
-    optTransportadoras.options[optTransportadoras.selectedIndex].innerText
-      .split("-")
-      .forEach((item, i) => {
-        if (i == 1) {
-          nomeTransportadora += item;
-        }
-        if (i > 1) {
-          nomeTransportadora += "-" + item;
-        }
-      });
-
-    switch (document.getElementById("optFrete").value) {
-      case "FOB":
-        json["ID_TRANSPORTADORA"] =
-          optTransportadoras.options[optTransportadoras.selectedIndex].value; //1;
-        json["TRANSPORTADORA"] = nomeTransportadora; //selecionados[0][5].innerText
-        break;
-
-      case "CIF":
-        json["ID_TRANSPORTADORA"] =
-          optTransportadoras.options[optTransportadoras.selectedIndex].value;
-        json["TRANSPORTADORA"] = nomeTransportadora;
-        break;
-
-      case "FOB-EDIT":
-        json["ID_TRANSPORTADORA"] =
-          optTransportadoras.options[optTransportadoras.selectedIndex].value;
-        json["TRANSPORTADORA"] =
-          document.getElementById("editTransportadora").value;
-        break;
-
-      default:
-        break;
-    }
-
-    json["ID_LIQUIDACAO"] =
-      document.getElementById("txtIdLiquidacao").innerText;
-    json["ID_CIDADE_TRANSP"] = optCidade.options[optCidade.selectedIndex].value;
-    json["CIDADE"] = optCidade.options[optCidade.selectedIndex].innerText;
-    json["PLACA"] = document.getElementById("txtPlaca").value;
-    json["MOTORISTA"] = document.getElementById("txtMotorista").value;
-    json["CARGA_PALETIZADA"] = document.getElementById("customRadio1").checked;
-    json["CARGA_FRACIONADA"] = document.getElementById("customRadio2").checked;
-    json["CARGA_BATIDA"] = document.getElementById("customRadio3").checked;
-    json["CARGA_OUTROS"] = document.getElementById("customRadio4").checked;
-    json["STATUS"] = document.getElementById("statusAgendado").checked
-      ? "AGENDADO"
-      : "AGUARDANDO";
-    json["GESTAO"] = document.getElementById("gestao").checked ? "S" : "N";
-    json["OBS_NFE"] = document.getElementById("txtObs").value.toUpperCase();
-    json["HORARIO_COLETA"] = $("#horarioColeta").find("input").val();
-    json["HORARIO_ENTREGA"] = $("#horarioEntrega").find("input").val();
-    json["FRETE"] = document.getElementById("optFrete").value;
-    json["ID_CLIENTE"] = selecionados[0][4].innerText;
-    json["VLR_FRETE"] = document.getElementById("txtVlrFrete").value;
-
-    let pedidos = selecionados[0][1].innerText;
-    selecionados.forEach((LIQU_ID) => {
-      if (pedidos != LIQU_ID[1].innerText) {
-        pedidos += "," + LIQU_ID[1].innerText;
-      }
-    });
-
-    json["PEDIDOS"] = pedidos;
-
-    console.log(json);
-
-    Swal.fire({
-      title: "Deseja confirmar coleta?",
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: "Confirmar",
-      denyButtonText: `Cancelar`,
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        if (JSON.parse(localStorage.getItem("user")) != null) {
-          ajax(
-            _BASE_URL + _EP_GERAR_COLETA,
-            "POST",
-            json,
-            async function (res) {
-              console.log(res);
-
-              if (res.status == 200) {
-                socket.emit("alteracaoControle", true);
-                getPedidosStatus();
-                $("#modal-coleta").modal("hide");
-                Swal.fire({
-                  icon: "success",
-                  title:
-                    res.message +
-                    " " +
-                    document.getElementById("txtIdLiquidacao").innerText,
-                  text: "",
-                });
-              } else {
-                Swal.fire({
-                  icon: "error",
-                  title: res.message,
-                  text: "",
-                });
-              }
-              insert = false;
-            },
-            JSON.parse(localStorage.getItem("user")).accessToken
-          );
-        }
-      } else {
-        insert = false;
-      }
-    });
-  }
-};
+  ajax(
+    _BASE_URL + "api/v1/logistica_liquidacao/setStatus",
+    "PUT",
+    data,
+    function (res) {},
+    JSON.parse(localStorage.getItem("user")).accessToken
+  );
+}
 
 function getTransportadoras(seleciona = 0) {
   if (JSON.parse(localStorage.getItem("user")) != null) {

@@ -599,7 +599,7 @@ gerarColera = () => {
   selecionados = [];
 
   let check = document.getElementById("itens").querySelectorAll(".selected");
-
+  console.log("check", check);
   check.forEach((item) => {
     if (
       item.querySelector(".select-checkbox") != null &&
