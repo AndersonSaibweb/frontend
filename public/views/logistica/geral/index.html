@@ -49,9 +49,9 @@
 -->
 
 <body class="hold-transition sidebar-collapse">
-  <div class="wrapper">
-        
-   
+    <div class="wrapper">
+
+
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -83,14 +83,24 @@
                                             hidden id="loading" style="margin-left: 10px;"
                                             class="fa fa-refresh fa-spin"></i>
                                     </h3>
+
                                     <button style="margin-left: 15px; width: 100px" type="button"
                                         class="btn btn-block btn-secondary" onclick="reload()">Atualizar</button>
+
                                 </div>
+
+
 
                                 <div class="card-body"
                                     style="padding: 0px !important; background-color: #5f595930 !important;">
-
                                     <div class="drag-container">
+                                        <div class="form-group" style="margin: 0; display: flex; justify-content: flex-end;">
+                                            <div style="display: flex; justify-content: flex-start; margin-right: 10px;">
+                                                <label style="color: #212529;">Filtrar finalizados</label>
+                                                <input type="checkbox" id="filtrarFinalizados" class="form-check-input"
+                                                    onchange="get_all()">
+                                            </div>
+                                        </div>
                                         <ul class="drag-list">
                                             <li class="drag-column drag-column-on-hold">
                                                 <span class="drag-column-header">
@@ -108,8 +118,8 @@
 
                                                 <ul class="drag-inner-list" id="AGUARDANDO AGENDA">
                                                     <li class="drag-item"></li>
-                                                </ul>  
-                                             </li>  
+                                                </ul>
+                                            </li>
                                             <!-- <li class="drag-column drag-column-in-progress">
                                                 <span class="drag-column-header">
                                                     <i class="nav-icon fas fa-calendar-alt"></i>
@@ -160,7 +170,6 @@
                                                 </span>
                                                 <!-- <div class="drag-options" id="options4"></div> -->
                                                 <ul class="drag-inner-list" id="EM TRANSITO">
-                                                    <li class="drag-item"></li>
                                                     <li class="drag-item"></li>
                                                 </ul>
                                             </li>
@@ -216,6 +225,23 @@
                                                     <li class="drag-item"></li>
                                                 </ul>
                                             </li>
+
+                                            <li class="drag-column drag-column-in-progress">
+                                                <span class="drag-column-header">
+                                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                                    <h2>FINALIZADOS</h2>
+                                                    <svg data-target="options4" class="drag-header-more" fill="#FFFFFF"
+                                                        height="24" viewBox="0 0 24 24" width="24">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                    </svg>
+                                                </span>
+                                                <!-- <div class="drag-options" id="options5"></div> -->
+                                                <ul class="drag-inner-list" id="FINALIZADO">
+                                                    <li class="drag-item"></li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </div>
 
@@ -233,87 +259,90 @@
             </div>
         </div>
 
-       
+
 
         <div class="modal fade" id="modal-default2" style="display: none;" aria-hidden="true">
-          <!-- <div class="modal-dialog modal-lg"> -->
-          <div class="modal-dialog modal-md">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal2"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div>
-              <div class="modal-body" style="padding: 0px;">
-    
-                <div class="card card-primary card-outline card-outline-tabs">
-                  <div class="card-header p-0 border-bottom-0">
-                    <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active" id="custom-tabs-four-detalhes-tab" data-toggle="pill"
-                          href="#custom-tabs-four-detalhes" role="tab" aria-controls="custom-tabs-four-detalhes"
-                          aria-selected="true">
-                          <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">Detalhes</font>
-                          </font>
-                        </a>
-                      </li>
-                      
-                    </ul>
-                  </div>
-                  <div class="card-body">
-                    <div class="tab-content" id="custom-tabs-four-tabContent">
-                      <div class="tab-pane fade active show" id="custom-tabs-four-detalhes" role="tabpanel"
-                        aria-labelledby="custom-tabs-four-detalhes-tab">
-                        <div class="row">
-                          <div class="col-md-12">
-                        
-                            <div id="divRegistrar" style="padding: 15px;">
-    
-                              <div class="form-group">
-                                <label>Status</label>
-                                <select required id="optStatus" class="form-control" onchange="verify()">
-                                  <option value="">--Selecione--</option>
-                                  <option value="3">NO CLIENTE</option>
-                                  <option value="4">PARADO</option>
-                                  <option value="6">OCORRENCIA</option>
-                                </select>
-                              </div>
-    
-                             
-                              <div hidden id="optOcorrenciasGroup" class="form-group">
-                                <label>Ocorrências</label>
-                                <select required id="optOcorrencias" hidden onchange="changeFunc();"
-                                  class="form-control select2bs4 select2-accessible" style="width: 100%;"
-                                  tabindex="-1" aria-hidden="true">
-                                  <option selected value="">--Selecione--</option>
-                                </select>
-                              </div>
-    
-                              <label id="txtObs">Observação</label>
-                              <textarea style="height: 70px;" id="txtNovaMensagem" class="form-control"
-                                placeholder="Observação"></textarea>
-                              <div style="text-align: right; padding-top: 5px;">
-                                <button id="btnRegistro" onclick="registrar()" type="button"
-                                  class="btn btn-primary">Registrar</button>
-                              </div>
-                            
-    
-                            
-                            </div>
-    
-                          </div>
-                          <!-- /.col -->
-                        </div>
-                      </div>
-                     
+            <!-- <div class="modal-dialog modal-lg"> -->
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="font-size: 20px;font-weight: bold;" id="titleModal2"></h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            onclick="habilitarOpcoesStatus()">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
-                  </div>
+                    <div class="modal-body" style="padding: 0px;">
+
+                        <div class="card card-primary card-outline card-outline-tabs">
+                            <div class="card-header p-0 border-bottom-0">
+                                <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-four-detalhes-tab" data-toggle="pill"
+                                            href="#custom-tabs-four-detalhes" role="tab"
+                                            aria-controls="custom-tabs-four-detalhes" aria-selected="true">
+                                            <font style="vertical-align: inherit;">
+                                                <font style="vertical-align: inherit;">Alterar status</font>
+                                            </font>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-four-tabContent">
+                                    <div class="tab-pane fade active show" id="custom-tabs-four-detalhes"
+                                        role="tabpanel" aria-labelledby="custom-tabs-four-detalhes-tab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <div id="divRegistrar" style="padding: 15px;">
+
+                                                    <div class="form-group">
+                                                        <label style="color: #212529">Status</label>
+                                                        <select required id="optStatus" class="form-control"
+                                                            onchange="verify()">
+                                                            <option value="">--Selecione--</option>
+                                                            <option id="opcNoCliente" value="3">NO CLIENTE</option>
+                                                            <option id="opcParado" value="4">PARADO</option>
+                                                            <option id="opcOcorrencia" value="6">OCORRENCIA</option>
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div hidden id="optOcorrenciasGroup" class="form-group">
+                                                        <label style="color: #212529">Ocorrências</label>
+                                                        <select required id="optOcorrencias" hidden
+                                                            onchange="changeFunc();"
+                                                            class="form-control select2bs4 select2-accessible"
+                                                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                                            <option selected value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <label style="color: #212529" id="txtObs">Observação</label>
+                                                    <textarea style="height: 70px;" id="txtNovaMensagem"
+                                                        class="form-control" placeholder="Observação"></textarea>
+                                                    <div style="text-align: right; padding-top: 5px;">
+                                                        <button id="btnRegistro" onclick="onClickRegistrar()"
+                                                            type="button" class="btn btn-primary">Registrar</button>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
 
         <div class="modal fade" id="modal-coleta" style="display: none; color: black !important;"
@@ -323,7 +352,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">Liquidação: <b id="txtIdLiquidacao"></b></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">×</span>
+                            <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -535,7 +564,7 @@
                                                 </table>
                                             </div>
                                         </div>
- 
+
                                         <div class="card-footer" style="text-align: right; background-color: white;">
                                             <button onclick="submitHandler()" class="btn btn-primary">Confirmar</button>
                                         </div>
@@ -552,9 +581,9 @@
         </div>
 
 
-       
 
-        
+
+
 
         <!-- jQuery -->
         <!-- <script src="../../../../plugins/jquery/jquery.min.js"></script> -->

@@ -1,5 +1,7 @@
+var obrigatorio = [];
 var idLiquidacao = 0;
 var idOcorrecia = 0;
+var idColeta = 0;
 function dataAnteriorFormatada(dt) {
   var data = new Date(dt),
     dia = data.getDate().toString().padStart(2, "0"),
@@ -39,14 +41,37 @@ function principal() {
   document.getElementById("secundario").hidden = true;
 }
 
-function openModalAlterarStatus() {
-  $("#modal-default2").modal("show");
+function habilitarOpcoesStatus() {
+  $("#opcNoCliente").attr("hidden", false);
+  $("#opcParado").attr("hidden", false);
 }
 
-function aoClicarCard(statusLiq, idLiquidacao_) {
+function openModalAlterarStatus(statusLiq) {
+  $("#modal-default2").modal("show");
+
+  switch (statusLiq) {
+    case "NO CLIENTE":
+      $("#opcNoCliente").attr("hidden", true);
+      break;
+    case "PARADO":
+      $("#opcNoCliente").attr("hidden", true);
+      $("#opcParado").attr("hidden", true);
+      break;
+    default:
+      break;
+  }
+}
+
+function aoClicarCard(statusLiq, idLiquidacao_, idColeta_) {
   // console.log("liquidacao", liquidacao);
   idLiquidacao = idLiquidacao_;
-  const listaStatusSemClick = ["CARREGANDO", "FINALIZADO"];
+  idColeta = idColeta_;
+  const listaStatusSemClick = [
+    "CARREGANDO",
+    "FINALIZADO",
+    "OCORRENCIA",
+    "FINALIZADO",
+  ];
   const listaStatusModalLiberarPedido = ["AGUARDANDO AGENDA"];
 
   if (!statusLiq || listaStatusSemClick.includes(statusLiq)) {
@@ -58,41 +83,44 @@ function aoClicarCard(statusLiq, idLiquidacao_) {
     return;
   }
 
-  openModalAlterarStatus();
+  openModalAlterarStatus(statusLiq);
 }
 
 function get_all() {
   $("#loading").removeAttr("hidden");
   $("#message").text("Atualizando.. ");
+  let url = "api/v1/logistica_liquidacao/getLiquidacoes";
+  const getFinalizados = $("#filtrarFinalizados")[0].checked;
 
-  ajax(
-    _BASE_URL + "api/v1/logistica_liquidacao/getLiquidacoes",
-    "GET",
-    {},
-    function (res) {
-      console.log(res);
-      console.log(res.filter((item) => item.STATUS !== "AGENDADO"));
+  if (getFinalizados) {
+    url += "?isFinalizados=true";
+  }
 
-      if (res.length) {
-        document.getElementById("AGUARDANDO AGENDA").innerHTML = "";
-        // document.getElementById("AGENDADO").innerHTML = "";
-        document.getElementById("CARREGANDO").innerHTML = "";
-        document.getElementById("EM TRANSITO").innerHTML = "";
-        document.getElementById("NO CLIENTE").innerHTML = "";
-        document.getElementById("OCORRENCIA").innerHTML = "";
-        const listaStatusSemClick = ["CARREGANDO", "FINALIZADO"];
-        res.forEach((item) => {
-          console.log(item.STATUS);
-          // console.log(item)
-          if (item.STATUS === "AGENDADO") {
-            return;
-          }
-          if (!document.getElementById(item.LIQU_ID)) {
-            document.getElementById(item.STATUS).innerHTML += `
+  ajax(_BASE_URL + url, "GET", {}, function (res) {
+    console.log(res);
+    console.log(res.filter((item) => item.STATUS !== "AGENDADO"));
+
+    if (res.length) {
+      document.getElementById("AGUARDANDO AGENDA").innerHTML = "";
+      // document.getElementById("AGENDADO").innerHTML = "";
+      document.getElementById("CARREGANDO").innerHTML = "";
+      document.getElementById("EM TRANSITO").innerHTML = "";
+      document.getElementById("NO CLIENTE").innerHTML = "";
+      document.getElementById("PARADO").innerHTML = "";
+      document.getElementById("OCORRENCIA").innerHTML = "";
+      document.getElementById("FINALIZADO").innerHTML = "";
+
+      res.forEach((item) => {
+        console.log("item.STATUS", item.STATUS);
+        if (item.STATUS === "AGENDADO") {
+          return;
+        }
+        if (!document.getElementById(item.LIQU_ID)) {
+          document.getElementById(item.STATUS).innerHTML += `
                             <li class="drag-item" id="${item.LIQU_ID}"
                             ondblclick="aoClicarCard('${item.STATUS}', '${
-              item.LIQU_ID
-            }')">
+            item.LIQU_ID
+          }', '${item.COLETA}')">
                                 <div style="padding: 5px 0px 0px 5px; color: rgb(61, 81, 129);">
                                     <div class="col-12">
                                         <div class="row">
@@ -132,7 +160,6 @@ function get_all() {
                                     </div>
                                 </div>
                             </li>`;
-          }
 
           let cliente = item.CLIENTE;
           // if (item.CLIENTE.length >= 23) {
@@ -142,51 +169,51 @@ function get_all() {
           document.getElementById(`CLI-${item.LIQU_ID}`).innerHTML += `
                             <h6 class="texto-item"><i class="nav-icon fas fa-user"></i>${cliente}</h6>
                         `;
-        });
+        }
+      });
 
-        let options = {
-          timeZone: "America/Sao_Paulo",
-          day: "numeric",
-          month: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        };
-        let date = new Intl.DateTimeFormat([], options);
-        $("#message").text("Atualizado " + date.format(new Date()));
-        $("#loading").attr("hidden", "true");
+      let options = {
+        timeZone: "America/Sao_Paulo",
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      };
+      let date = new Intl.DateTimeFormat([], options);
+      $("#message").text("Atualizado " + date.format(new Date()));
+      $("#loading").attr("hidden", "true");
 
-        // let liquidacoes = document.getElementsByClassName('drag-item');
+      // let liquidacoes = document.getElementsByClassName('drag-item');
 
-        // for (let i = 0; i < liquidacoes.length; i++) {
-        //     liquidacoes[i].ondblclick = function (e) {
-        //         let liq = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id') || 0
-        //         if (liq) {
+      // for (let i = 0; i < liquidacoes.length; i++) {
+      //     liquidacoes[i].ondblclick = function (e) {
+      //         let liq = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id') || 0
+      //         if (liq) {
 
-        //             console.log();
-        //             Swal.fire({
-        //                 title: '<strong>' + liq + '<u>example</u></strong>',
-        //                 icon: 'info',
-        //                 html:
-        //                     'You can use <b>bold text</b>, ' +
-        //                     '<a href="//sweetalert2.github.io">links</a> ' +
-        //                     'and other HTML tags',
-        //                 showCloseButton: true,
-        //                 showCancelButton: true,
-        //                 focusConfirm: false,
-        //                 confirmButtonText:
-        //                     '<i class="fa fa-thumbs-up"></i> Great!',
-        //                 confirmButtonAriaLabel: 'Thumbs up, great!',
-        //                 cancelButtonText:
-        //                     '<i class="fa fa-thumbs-down"></i>',
-        //                 cancelButtonAriaLabel: 'Thumbs down'
-        //             })
-        //         }
-        //     }
-        // };
-      }
+      //             console.log();
+      //             Swal.fire({
+      //                 title: '<strong>' + liq + '<u>example</u></strong>',
+      //                 icon: 'info',
+      //                 html:
+      //                     'You can use <b>bold text</b>, ' +
+      //                     '<a href="//sweetalert2.github.io">links</a> ' +
+      //                     'and other HTML tags',
+      //                 showCloseButton: true,
+      //                 showCancelButton: true,
+      //                 focusConfirm: false,
+      //                 confirmButtonText:
+      //                     '<i class="fa fa-thumbs-up"></i> Great!',
+      //                 confirmButtonAriaLabel: 'Thumbs up, great!',
+      //                 cancelButtonText:
+      //                     '<i class="fa fa-thumbs-down"></i>',
+      //                 cancelButtonAriaLabel: 'Thumbs down'
+      //             })
+      //         }
+      //     }
+      // };
     }
-  );
+  });
 }
 
 $.validator.setDefaults({
@@ -222,7 +249,6 @@ $.validator.setDefaults({
         .getElementById("itens2")
         .querySelectorAll("tr");
       const pedidos = linhaPedidos[0];
-      console.log("pedidos", linhaPedidos.NodeList);
 
       let pedidos_ = "";
       const idCliente = pedidos.querySelectorAll("td")[1].innerText;
@@ -238,9 +264,6 @@ $.validator.setDefaults({
           }
         });
       });
-
-      console.log("idCliente", idCliente);
-      console.log("pedidos_", pedidos_);
 
       // check.length &&
       //   check.forEach((item) => {
@@ -428,7 +451,6 @@ function getOcorrecias(seleciona = 0) {
       "GET",
       {},
       function (grus) {
-        console.log(grus);
         let optOcorrencias = document.getElementById("optOcorrencias");
         let optionsGrus = '<option selected value="0">--Selecione--</option>';
         for (let i in grus) {
@@ -440,7 +462,6 @@ function getOcorrecias(seleciona = 0) {
         let arroptOcorrencias = optOcorrencias.options;
         for (let i = 0; i < arroptOcorrencias.length; i++) {
           if (arroptOcorrencias[i].value == seleciona) {
-            console.log("seleção");
             optOcorrencias.selectedIndex = i;
           }
         }
@@ -455,7 +476,7 @@ function getOcorrecias(seleciona = 0) {
   // }
 }
 
-const ocorrencias = {
+const statusEnum = {
   AGENDADO: 0,
   CARREGANDO: 1,
   "EM TRANSITO": 2,
@@ -465,6 +486,123 @@ const ocorrencias = {
   OCORRENCIA: 6,
   "AGUARDANDO AGENDA": 9,
 };
+
+function validaCnpjCpf(val) {
+  val = val.trim();
+  val = val.replace(/([^\d])+/gim, "");
+
+  if (val.length >= 11) {
+    var cpf = val.trim();
+    cpf = cpf.split("");
+
+    var v1 = 0;
+    var v2 = 0;
+    var aux = false;
+
+    for (var i = 1; cpf.length > i; i++) {
+      if (cpf[i - 1] != cpf[i]) {
+        aux = true;
+      }
+    }
+
+    if (aux == false) {
+      // return false;
+    } else {
+      for (var i = 0, p = 10; cpf.length - 2 > i; i++, p--) {
+        v1 += cpf[i] * p;
+      }
+
+      v1 = (v1 * 10) % 11;
+
+      if (v1 == 10) {
+        v1 = 0;
+      }
+
+      if (v1 != cpf[9]) {
+        // return false;
+      } else {
+        for (var i = 0, p = 11; cpf.length - 1 > i; i++, p--) {
+          v2 += cpf[i] * p;
+        }
+
+        v2 = (v2 * 10) % 11;
+
+        if (v2 == 10) {
+          v2 = 0;
+        }
+
+        if (v2 != cpf[10]) {
+          // return false;
+        } else {
+          return true;
+        }
+      }
+    }
+  }
+
+  if (val.length >= 14) {
+    var cnpj = val.trim();
+    cnpj = cnpj.split("");
+
+    var v1 = 0;
+    var v2 = 0;
+    var aux = false;
+
+    for (var i = 1; cnpj.length > i; i++) {
+      if (cnpj[i - 1] != cnpj[i]) {
+        aux = true;
+      }
+    }
+
+    if (aux == false) {
+      return false;
+    }
+
+    for (var i = 0, p1 = 5, p2 = 13; cnpj.length - 2 > i; i++, p1--, p2--) {
+      if (p1 >= 2) {
+        v1 += cnpj[i] * p1;
+      } else {
+        v1 += cnpj[i] * p2;
+      }
+    }
+
+    v1 = v1 % 11;
+
+    if (v1 < 2) {
+      v1 = 0;
+    } else {
+      v1 = 11 - v1;
+    }
+
+    if (v1 != cnpj[12]) {
+      return false;
+    }
+
+    for (var i = 0, p1 = 6, p2 = 14; cnpj.length - 1 > i; i++, p1--, p2--) {
+      if (p1 >= 2) {
+        v2 += cnpj[i] * p1;
+      } else {
+        v2 += cnpj[i] * p2;
+      }
+    }
+
+    v2 = v2 % 11;
+
+    if (v2 < 2) {
+      v2 = 0;
+    } else {
+      v2 = 11 - v2;
+    }
+
+    if (v2 != cnpj[13]) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
 
 verify = () => {
   var x = document.getElementById("optStatus").value;
@@ -478,78 +616,105 @@ verify = () => {
     } catch (e) {}
     $("#optOcorrenciasGroup").removeAttr("hidden");
     $("#optOcorrencias").removeAttr("hidden");
-    // obrigatorio.push("optOcorrencias");
+    obrigatorio.push("optOcorrencias");
     let x = document.getElementById("btnRegistro").offsetTop;
-    console.log(x);
     // $('#modal-default2 .modal-body').scrollTop(x - 30);
   } else {
-    // if (obrigatorio.includes("txtCpfMotorista")) {
-    // obrigatorio = ["optStatus", "txtCpfMotorista"];
-    // } else {
-    // obrigatorio = ["optStatus"];
-    // }
+    if (obrigatorio.includes("txtCpfMotorista")) {
+      obrigatorio = ["optStatus", "txtCpfMotorista"];
+    } else {
+      obrigatorio = ["optStatus"];
+    }
 
     $("#optOcorrenciasGroup").attr("hidden", "true");
     $("#optOcorrenciasGroup").attr("hidden", "true");
   }
 };
+
+function validarCamposInputs(campos = []) {
+  let retorno = true;
+
+  let camposObrigatorio = document.querySelectorAll("[required]");
+  camposObrigatorio.forEach((inp) => {
+    inp.style = "";
+    campos.forEach((camp) => {
+      if (camp == inp.id && inp.value == "") {
+        inp.style = `border: 1px solid #ff0000;`;
+        retorno = false;
+      }
+      if (camp == "optOcorrencias" && camp == inp.id && inp.value == "0") {
+        let grpu = document.getElementById("optOcorrenciasGroup");
+        let grpu2 = grpu.querySelector("span");
+        // grpu2.style = `border: 1px solid #ff0000;`;
+        retorno = false;
+      }
+    });
+  });
+  return retorno;
+}
 
 registrar = () => {
   console.log(obrigatorio);
-  if (validarCamposInputs(obrigatorio)) {
-    if (
-      !validaCnpjCpf(document.getElementById("txtCpfMotorista").value) &&
-      obrigatorio.includes("txtCpfMotorista")
-    ) {
-      document.getElementById(
-        "txtCpfMotorista"
-      ).style = `border: 1px solid #ff0000;`;
-      Swal.fire({
-        icon: "error",
-        title: "CPF Inválido!",
-        text: "Verifique os dígitos",
-      });
-      return;
-    }
 
-    console.log(idLiquidacao);
-    console.log(idColeta);
-    aaaa = document.getElementById("optStatus").value;
+  if (obrigatorio.includes("optOcorrencias") && !parseInt(idOcorrecia)) {
+    alert("Selecione uma ocorrência");
+    return;
+  }
 
-    if (document.getElementById("optStatus").value == "") return;
+  aaaa = document.getElementById("optStatus").value;
 
-    let json = {};
-    json["idLiquidacao"] = idLiquidacao;
-    json["idColeta"] = idColeta;
-    json["status"] = document.getElementById("optStatus").value;
-    json["obs"] = document.getElementById("txtNovaMensagem").value;
-    json["idOcorrecia"] = idOcorrecia;
+  if (document.getElementById("optStatus").value == "") return;
 
-    if (JSON.parse(localStorage.getItem("user")) != null && !request) {
-      ajax(
-        _BASE_URL + _EP_POST_CDTR_LOG_AGENDAMENTOS,
-        "POST",
-        json,
-        function (res) {
-          if (res.status == 200) {
-            //atualizarTabela()
-            obrigatorio = ["optStatus"];
-            $("#modal-default2").modal("hide");
-            document.getElementById("txtCpfMotorista").value = "";
-            socket.emit("alteracaoControle", true);
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Falha a salvar!",
-              text: "",
-            });
-          }
-        },
-        JSON.parse(localStorage.getItem("user")).accessToken
-      );
-    }
+  let json = {};
+  json["idLiquidacao"] = idLiquidacao;
+  json["idColeta"] = idColeta;
+  json["status"] = document.getElementById("optStatus").value;
+  json["obs"] = document.getElementById("txtNovaMensagem").value;
+  json["idOcorrecia"] = idOcorrecia;
+  console.log("json", json);
+  if (JSON.parse(localStorage.getItem("user")) != null) {
+    ajax(
+      _BASE_URL + _EP_POST_CDTR_LOG_AGENDAMENTOS,
+      "POST",
+      json,
+      function (res) {
+        if (res.status == 200) {
+          //atualizarTabela()
+          obrigatorio = ["optStatus"];
+          $("#modal-default2").modal("hide");
+          // socket.emit("alteracaoControle", true);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Falha a salvar!",
+            text: "",
+          });
+        }
+      },
+      JSON.parse(localStorage.getItem("user")).accessToken
+    );
   }
 };
+
+function onClickRegistrar() {
+  const codStatus = document.getElementById("optStatus").value;
+  const observacao = document.getElementById("txtNovaMensagem").value;
+  if (!codStatus) {
+    alert("Status obrigatório");
+    return;
+  }
+
+  if (parseInt(codStatus) === statusEnum.OCORRENCIA || observacao) {
+    registrar();
+  }
+
+  if (parseInt(codStatus) === statusEnum.OCORRENCIA && !parseInt(idOcorrecia)) {
+    return;
+  }
+  atualizarStatusAgendamento(codStatus);
+
+  $("#modal-default2").modal("hide");
+}
 
 function atualizarStatusAgendamento(status) {
   if (!status) {
@@ -565,7 +730,9 @@ function atualizarStatusAgendamento(status) {
     _BASE_URL + "api/v1/logistica_liquidacao/setStatus",
     "PUT",
     data,
-    function (res) {},
+    function (res) {
+      get_all();
+    },
     JSON.parse(localStorage.getItem("user")).accessToken
   );
 }
@@ -577,7 +744,6 @@ function getTransportadoras(seleciona = 0) {
       "GET",
       {},
       function (grus) {
-        console.log(grus);
         try {
           let optTransportadoras =
             document.getElementById("optTransportadoras");
@@ -591,7 +757,6 @@ function getTransportadoras(seleciona = 0) {
           let arroptTransportadoras = optTransportadoras.options;
           for (let i = 0; i < arroptTransportadoras.length; i++) {
             if (arroptTransportadoras[i].value == seleciona) {
-              console.log("seleção");
               optTransportadoras.selectedIndex = i;
             }
           }
@@ -610,7 +775,6 @@ function getCidades(seleciona = 0) {
       "GET",
       {},
       function (grus) {
-        console.log(grus);
         try {
           let optCidade = document.getElementById("optCidade");
           let optionsGrus = ""; //'<option selected value="0">--Selecione--</option>';
@@ -623,7 +787,6 @@ function getCidades(seleciona = 0) {
           let arroptCidade = optCidade.options;
           for (let i = 0; i < arroptCidade.length; i++) {
             if (arroptCidade[i].value == seleciona) {
-              console.log("seleção");
               optCidade.selectedIndex = i;
             }
           }
@@ -662,13 +825,11 @@ async function getCidadeTransportadora(id_transportadora) {
       "POST",
       json,
       async function (grus) {
-        console.log(grus);
         let id = 1;
         if (grus) id = grus.GEN_ID;
 
         let optCidade = document.getElementById("optCidade");
 
-        console.log(id);
         //document.getElementById('select2-optCidade-container').innerHTML = optCidade.options[id].innerText
         // optCidade.selectedIndex = id
         $("#optCidade").val(id).trigger("change");
@@ -687,13 +848,11 @@ async function getCidadeCliente(id_cliente) {
       "POST",
       json,
       async function (grus) {
-        console.log(grus);
         let id = 1;
         if (grus) id = grus.CODIGO;
 
         let optCidade = document.getElementById("optCidade");
 
-        console.log(id);
         //document.getElementById('select2-optCidade-container').innerHTML = optCidade.options[id].innerText
         // optCidade.selectedIndex = id
         $("#optCidade").val(id).trigger("change");
