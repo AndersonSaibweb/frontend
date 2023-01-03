@@ -44,18 +44,33 @@ function principal() {
 function habilitarOpcoesStatus() {
   $("#opcNoCliente").attr("hidden", false);
   $("#opcParado").attr("hidden", false);
+  $("#opcEmTransito").attr("hidden", false);
+  $("#opcOcorrencia").attr("hidden", false);
 }
 
 function openModalAlterarStatus(statusLiq) {
   $("#modal-default2").modal("show");
 
+  document.getElementById("optStatus").value = "";
+  document.getElementById("optOcorrencias").value = "";
+  document.getElementById("txtNovaMensagem").value = "";
+  $("#optOcorrenciasGroup").attr("hidden", true);
+
   switch (statusLiq) {
+    case "EM TRANSITO":
+      $("#opcEmTransito").attr("hidden", true);
+      break;
     case "NO CLIENTE":
       $("#opcNoCliente").attr("hidden", true);
+      $("#opcEmTransito").attr("hidden", true);
       break;
     case "PARADO":
       $("#opcNoCliente").attr("hidden", true);
       $("#opcParado").attr("hidden", true);
+      $("#opcEmTransito").attr("hidden", true);
+      break;
+    case "OCORRENCIA":
+      $("#opcOcorrencia").attr("hidden", true);
       break;
     default:
       break;
@@ -69,8 +84,9 @@ function aoClicarCard(statusLiq, idLiquidacao_, idColeta_) {
   const listaStatusSemClick = [
     "CARREGANDO",
     "FINALIZADO",
-    "OCORRENCIA",
+    // "OCORRENCIA",
     "FINALIZADO",
+    "AGENDADO",
   ];
   const listaStatusModalLiberarPedido = ["AGUARDANDO AGENDA"];
 
@@ -97,12 +113,9 @@ function get_all() {
   }
 
   ajax(_BASE_URL + url, "GET", {}, function (res) {
-    console.log(res);
-    console.log(res.filter((item) => item.STATUS !== "AGENDADO"));
-
     if (res.length) {
       document.getElementById("AGUARDANDO AGENDA").innerHTML = "";
-      // document.getElementById("AGENDADO").innerHTML = "";
+      document.getElementById("AGENDADO").innerHTML = "";
       document.getElementById("CARREGANDO").innerHTML = "";
       document.getElementById("EM TRANSITO").innerHTML = "";
       document.getElementById("NO CLIENTE").innerHTML = "";
@@ -111,10 +124,9 @@ function get_all() {
       document.getElementById("FINALIZADO").innerHTML = "";
 
       res.forEach((item) => {
-        console.log("item.STATUS", item.STATUS);
-        if (item.STATUS === "AGENDADO") {
-          return;
-        }
+        // if (item.STATUS === "AGENDADO") {
+        //   return;
+        // }
         if (!document.getElementById(item.LIQU_ID)) {
           document.getElementById(item.STATUS).innerHTML += `
                             <li class="drag-item" id="${item.LIQU_ID}"

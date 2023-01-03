@@ -120,7 +120,7 @@
                                                     <li class="drag-item"></li>
                                                 </ul>
                                             </li>
-                                            <!-- <li class="drag-column drag-column-in-progress">
+                                             <li class="drag-column drag-column-in-progress">
                                                 <span class="drag-column-header">
                                                     <i class="nav-icon fas fa-calendar-alt"></i>
                                                     <h2>Agendado</h2>
@@ -136,7 +136,7 @@
                                                     <li class="drag-item"></li>
                                                     <li class="drag-item"></li>
                                                 </ul>
-                                            </li> -->
+                                            </li> 
                                             <li class="drag-column drag-column-needs-review">
                                                 <span class="drag-column-header">
                                                     <i class="nav-icon fas fa-calendar-check"></i>
@@ -301,8 +301,11 @@
                                                     <div class="form-group">
                                                         <label style="color: #212529">Status</label>
                                                         <select required id="optStatus" class="form-control"
-                                                            onchange="verify()">
+                                                            onchange="verify()"
+                                                            onblur="habilitarOpcoesStatus()"
+                                                            >
                                                             <option value="">--Selecione--</option>
+                                                            <option id="opcEmTransito" value="2">EM TRANSITO</option>
                                                             <option id="opcNoCliente" value="3">NO CLIENTE</option>
                                                             <option id="opcParado" value="4">PARADO</option>
                                                             <option id="opcOcorrencia" value="6">OCORRENCIA</option>
