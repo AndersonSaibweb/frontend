@@ -11,7 +11,35 @@ $(document).on("destroy.dt", function (e, settings) {
   api.off(" xhr.dt ");
 });
 
-$(document).ready(function () {});
+$(document).ready(function () {
+  resize();
+});
+
+function resize() {
+  if ($(window).width() <= 1220) {
+    $("#example1_filter").css({
+      flex: "unset",
+      width: "100%",
+      "margin-top": "20px",
+    });
+    $("#container-type-filter").css({
+      flex: 1,
+      "max-width": "unset",
+    });
+  } else {
+    $("#example1_filter").css({
+      "margin-top": "0",
+      flex: 1,
+    });
+    $(".dt-buttons.btn-group").css({
+      "margin-top": 0,
+    });
+  }
+}
+
+$(window).resize(function () {
+  resize();
+});
 
 class Table {
   constructor() {
@@ -808,37 +836,57 @@ class Table {
     }
 
     const containerInputFilterProd = `
-        <div id="container-produtoFilter" class="col-md-3" >
-          <div class="form-group" >
-            <label for="produtoFilter">Produto:</label>
-              <input type="text" id="descriptionFilterMatPrima"  class="form-control" />
-              <ol id="OlProdutosMatPrima" style="width: auto;" data-sortOrder hidden>
-              </ol>
+    <div id="container-produtoFilter" class="col-md-3" >
+          <div id="wrapper-filter-input">
+            <label for="produtoFilter" id="label-produtoFilter">Produto: </label>
+            <input type="text" id="descriptionFilterMatPrima"  class="form-control" />
           </div>
-        </div>
-      `;
-
+          <ol id="OlProdutosMatPrima" style="width: auto;" data-sortOrder hidden>
+        </ol>
+    </div>
+  `;
     const containerSelectTypeFilter = `
-      <div id="container-type-filter" class="col-md-2" >
-        <div class="form-group type-filter">
-          <label for="">Filtro por:</label>
-          <select class="form-control" id="select-type-product">
-            <option selected value="1">Código</option>
-            <option value="2">Descrição</option>
-          </select>
-        </div>
-      </div>
-   `;
+  <div id="container-type-filter" class="col-md-2" >      
+      <label for="">Filtro por:</label>
+      <select class="form-control" id="select-type-product">
+        <option selected value="1">Código</option>
+        <option value="2">Descrição</option>
+      </select>        
+  </div>
+`;
 
     // const inputDate = $("#dateFilter").clone(true);
     // $(inputDate[0]).attr("hidden", false);
 
+    const divFilterPai = document.getElementsByClassName("dt-buttons")[0];
     $("#example1_filter label:eq(0)").before(
       `
         ${containerSelectTypeFilter}
         ${containerInputFilterProd}
       `
     );
+    $(divFilterPai).append($("#example1_filter"));
+    $(divFilterPai).css({
+      position: "unset",
+      width: "100%",
+      "max-width": "1121px",
+    });
+    $(divFilterPai.getElementsByTagName("button")).css({
+      flex: "unset",
+      height: "max-content",
+    });
+
+    const divContentSelectTypeFilter = document.getElementById(
+      "container-type-filter"
+    );
+    $(divContentSelectTypeFilter).css({
+      display: "flex",
+      gap: "5px",
+    });
+
+    $(divContentSelectTypeFilter.getElementsByTagName("select")).css({
+      width: "100%",
+    });
 
     let timeOut;
 
@@ -853,8 +901,22 @@ class Table {
       }, 600);
     });
 
+    $("#wrapper-filter-input").css({
+      display: "flex",
+    });
+
     $("#descriptionFilterMatPrima").css({
       height: "calc(1.8125rem + 2px)",
+      width: "100%",
+    });
+
+    $("#container-type-filter").css({
+      "max-width": "unset",
+      flex: 1,
+    });
+    $("#container-produtoFilter").css({
+      "max-width": "unset",
+      flex: 1,
     });
 
     $("#OlProdutosMatPrima").css({
@@ -874,6 +936,7 @@ class Table {
       display: "flex",
       gap: "10px",
     });
+    resize();
 
     // $("#produtoFilter").css({
     //   height: "calc(1.8125rem + 2px)",

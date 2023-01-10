@@ -11,7 +11,28 @@ $(document).on("destroy.dt", function (e, settings) {
   api.off(" xhr.dt ");
 });
 
-$(document).ready(function () {});
+function resize() {
+  if ($(window).width() <= 1220) {
+    $("#example1_filter").css({
+      flex: "unset",
+      width: "100%",
+      "margin-top": "20px",
+    });
+    $("#container-type-filter").css({
+      flex: 1,
+      "max-width": "unset",
+    });
+  } else {
+    $("#example1_filter").css({
+      "margin-top": "0",
+      flex: 1,
+    });
+  }
+}
+
+$(window).resize(function () {
+  resize();
+});
 
 class Table {
   constructor() {
@@ -263,7 +284,7 @@ class Table {
     const containerInputDate = `
     <div id="container-dateFilter" class="col-md-3" >
     <div class="form-group">
-      <div class="input-group">
+      <div class="input-group" style="flex-wrap: nowrap">
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="far fa-clock"></i></span>
         </div>
@@ -394,29 +415,30 @@ class Table {
 
     const containerInputFilterProd = `
       <div id="container-produtoFilter" class="col-md-3" >
-        <div class="form-group" >
-          <label for="produtoFilter">Produto:</label>
-            <input type="text" id="descriptionFilter"  class="form-control" />
+            <div id="wrapper-filter-input">
+              <label for="produtoFilter" id="label-produtoFilter">Produto: </label>
+              <input type="text" id="descriptionFilter"  class="form-control" />
+            </div>
             <ol id="OlProdutos" style="width: auto;" data-sortOrder hidden>
           </ol>
-        </div>
       </div>
     `;
 
     const containerSelectTypeFilter = `
-      <div id="container-type-filter" class="col-md-2" >
-        <div class="form-group type-filter">
+      <div id="container-type-filter" class="col-md-2" >      
           <label for="">Filtro por:</label>
           <select class="form-control" id="select-type-product">
             <option selected value="1">Código</option>
             <option value="2">Descrição</option>
-          </select>
-        </div>
+          </select>        
       </div>
    `;
 
     // const inputDate = $("#dateFilter").clone(true);
     // $(inputDate[0]).attr("hidden", false);
+
+    const divFilterPai = document.getElementsByClassName("dt-buttons")[0];
+
     const divFilter = $("#example1_filter");
     $("#example1_filter label:eq(0)").before(
       `
@@ -424,6 +446,18 @@ class Table {
         ${containerInputFilterProd}
       `
     );
+
+    $(divFilterPai).append($("#example1_filter"));
+    $(divFilterPai).css({
+      position: "unset",
+      width: "100%",
+      "margin-top": "50px",
+      "max-width": "1740px",
+    });
+    $(divFilterPai.getElementsByTagName("button")).css({
+      flex: "unset",
+      height: "max-content",
+    });
 
     let timeOut;
 
@@ -438,8 +472,25 @@ class Table {
       }, 600);
     });
 
+    const divContentSelectTypeFilter = document.getElementById(
+      "container-type-filter"
+    );
+    $(divContentSelectTypeFilter).css({
+      display: "flex",
+      gap: "5px",
+    });
+
+    $(divContentSelectTypeFilter.getElementsByTagName("select")).css({
+      width: "100%",
+    });
+
     $("#descriptionFilter").css({
       height: "calc(1.8125rem + 2px)",
+      width: "100%",
+    });
+
+    $("#wrapper-filter-input").css({
+      display: "flex",
     });
 
     $("#OlProdutos").css({
@@ -453,13 +504,16 @@ class Table {
     $("#example1_filter").css({
       display: "flex",
       "justify-content": "flex-end",
-      "margin-top": "60px",
+      flex: 1,
+      // "margin-top": "60px",
     });
 
     $(".type-filter").css({
       display: "flex",
       gap: "10px",
     });
+
+    resize();
 
     // $("#produtoFilter").css({
     //   height: "calc(1.8125rem + 2px)",
