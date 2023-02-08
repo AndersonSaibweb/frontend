@@ -489,8 +489,35 @@ function can_fat(id = 0) {
   });
 }
 
+function bloquear_pedido_inadimplente(idLiquidacao) {
+  const data = {
+    liquidacao: idLiquidacao,
+  };
+
+  ajax(
+    _BASE_URL + "api/v1/expedicao/seta_cliente_inadimplente",
+    "POST",
+    data,
+    function (res) {
+      console.log("res", res);
+    }
+  );
+}
+
 function verificar_estoque(id = 0, id_liqui = 0) {
-  let timerInterval;
+  const liquidacao = listaLiquidacoes.find(
+    (item) => item.LIQUIDACAO === id_liqui
+  );
+
+  if (liquidacao.SITUACAO === "I" && liquidacao.STATUS === "B") {
+    alert(
+      "Cliente em situação de inadimplência, enviado para à análise de crédito"
+    );
+
+    bloquear_pedido_inadimplente(liquidacao.LIQUIDACAO);
+    return;
+  }
+
   Swal.fire({
     title: "Carregando dados!",
     html: "", //I will close in <b></b> milliseconds.
@@ -602,7 +629,7 @@ function verificar_estoque(id = 0, id_liqui = 0) {
       // }, 100)
     },
     willClose: () => {
-      clearInterval(timerInterval);
+      // clearInterval(timerInterval);
     },
   }).then((result) => {
     /* Read more about handling dismissals below */
