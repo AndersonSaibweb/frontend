@@ -159,6 +159,7 @@ function recuperarDados(id) {
       "GET",
       {},
       function (grus) {
+        console.log("grus", grus);
         if (grus) {
           txtNomeGrupo.value = grus.GRUS_NOME;
           document.getElementById("txtIdOcorrencia").value = grus.OCOR_ID;

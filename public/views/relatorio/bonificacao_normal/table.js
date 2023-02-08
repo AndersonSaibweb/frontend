@@ -343,7 +343,6 @@ class Table {
               data: _this.nameCheck,
             });
           }
-          console.log(columns);
         }
 
         $(_this.nameTable).dataTable().fnDestroy();
@@ -372,142 +371,23 @@ class Table {
 
               $(api.column(0).footer()).html("Total");
 
-              _this.sum.forEach((position) => {
-                $(api.column(position).footer()).html(
-                  api
-                    .column(position, { page: "current" })
-                    .data()
-                    .reduce(function (a, b) {
-                      if (position == 12 && zerarCarteira) {
-                        return 0;
-                      } else {
-                        return intVal(a) + intVal(b);
-                      }
-                    }, 0)
-                    .toLocaleString("pt-br", {
-                      style: "currency",
-                      currency: "BRL",
-                    })
-                );
+              // _this.sum.forEach(position => {
 
-                // console.log($(api.column(position).footer()))
-                $(api.column(position).footer()).css("text-align", "right");
-              });
+              //     $(api.column(position).footer()).html(api
+              //         .column(position, { page: 'current' })
+              //         .data()
+              //         .reduce(function (a, b) {
+              //             if (position == 12 && zerarCarteira) {
+              //                 return 0
+              //             } else {
+              //                 return intVal(a) + intVal(b);
+              //             }
+              //         }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
+
+              //     // console.log($(api.column(position).footer()))
+              //     $(api.column(position).footer()).css('text-align', 'right')
+              // });
             },
-
-            // rowGroup: {
-            //     startRender: null,
-            //     endRender: function(rows, group) {
-            //         console.log(group)
-            //             // converting to interger to find total
-            //         var intVal = function(i) {
-            //             return typeof i === 'string' ?
-            //                 i.replace(/[\$,]/g, '') * 1 :
-            //                 typeof i === 'number' ?
-            //                 i : 0;
-            //         };
-
-            //         word = rows
-            //         console.log(rows)
-
-            //         var api = $(_this.nameTable).dataTable().api();
-            //         var rowss = api.rows({ page: 'all' }).nodes();
-
-            //         // var salaryAvg = rows
-            //         //     .data()
-            //         //     .pluck('DEVOLUCOES')
-            //         //     .reduce(function (a, b) {
-            //         //         return intVal(a) + intVal(b)
-            //         //     }, 0);
-
-            //         let total_2 = []
-            //         api.column(0, { page: 'all' }).data().each(function(group, i) {
-            //             _this.sum.forEach((s) => {
-            //                 let group_assoc = group.replace(' ', "_");
-            //                 group_assoc = group_assoc + '_' + s
-            //                     // console.log(group_assoc);
-            //                 if (typeof total_2[group_assoc] != 'undefined') {
-            //                     total_2[group_assoc] = total_2[group_assoc] + intVal(api.column(s).data()[i]);
-            //                 } else {
-            //                     total_2[group_assoc] = intVal(api.column(s).data()[i]);
-            //                 }
-            //             })
-            //         });
-
-            //         // var salaryAvg = rowss
-            //         //     .data()
-            //         //     .pluck('DEVOLUCOES')
-            //         //     .reduce(function (a, b) {
-            //         //         return intVal(a) + intVal(b)
-            //         //     }, 0);
-
-            //         // salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display(salaryAvg);
-
-            //         // var ageAvg = rows
-            //         //     .data()
-            //         //     .pluck(3)
-            //         //     .reduce(function (a, b) {
-            //         //         return a + b * 1;
-            //         //     }, 0) / rows.count();
-
-            //         let line = '<td>' + group + '</td>'
-            //         line += '<td></td>'
-            //         line += '<td></td>'
-            //         line += '<td></td>'
-            //         _this.sum.forEach((s) => {
-            //             let group_assoc2 = group.replace(' ', "_");
-            //             group_assoc2 = group_assoc2 + '_' + s
-            //             line += '<td>' + total_2[group_assoc2].toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) + '</td>'
-            //         })
-            //         return $('<tr style="font-weight: bold; text-align : right" />')
-            //             .append(line);
-            //     },
-            //     dataSrc: ['AREA']
-            // },
-
-            // "drawCallback": function (settings) {
-            //     // var api = this.api();
-            //     var api = $(_this.nameTable).dataTable().api();
-            //     apii = $(_this.nameTable).dataTable().api();
-            //     var rows = api.rows({ page: 'all' }).nodes();
-            //     var last = null;
-
-            //     // Remove the formatting to get integer data for summation
-            //     var intVal = function (i) {
-            //         return typeof i === 'string' ?
-            //             i.replace(/[\$,]/g, '') * 1 :
-            //             typeof i === 'number' ?
-            //                 i : 0;
-            //     };
-
-            //     let total_2 = []
-            //     api.column(0, { page: 'all' }).data().each(function (group, i) {
-            //         let group_assoc = group.replace(' ', "_");
-            //         // console.log(group_assoc);
-            //         if (typeof total_2[group_assoc] != 'undefined') {
-            //             total_2[group_assoc] = total_2[group_assoc] + intVal(api.column(8).data()[i]);
-            //         } else {
-            //             total_2[group_assoc] = intVal(api.column(8).data()[i]);
-            //         }
-            //         if (last !== group) {
-            //             $(rows).eq(i).before(
-            //                 // '<tr class="group"><td colspan="1">' + group + '</td><td class="' + group_assoc + '"></td></tr>'
-            //                 `<tr class="group">
-            //                 <td colspan="1">${group}</td>
-            //                 <td colspan="1"></td>
-            //                 <td colspan="1"></td>
-            //                 <td class="${group_assoc}"></td>
-            //                 </tr>`
-            //             );
-
-            //             last = group;
-            //         }
-            //     });
-            //     for (var key in total_2) {
-            //         $("." + key).html("R$ " + total_2[key]);
-            //     }
-            //     // $(_this.nameTable).DataTable().draw();
-            // },
 
             createdRow: function (row, data, dataIndex) {
               let indexRow = Object.keys(data);
@@ -548,21 +428,30 @@ class Table {
                     .html($("td", row).eq(index).html().substr(0, 35));
                 }
 
-                if (item == "BONIFICACAO" || item == "BONIFICACAO_EXTRA") {
-                  data[item] = String(data[item]).replace(/([,])/g, ".");
-
+                if (item == "VALOR" && data[item]) {
                   $("td", row)
                     .eq(index)
                     .text(
-                      parseFloat(data[item], 2).toLocaleString("pt-br", {
+                      data[item].toLocaleString("pt-br", {
                         style: "currency",
                         currency: "BRL",
                       })
                     );
+                  //   $(`td:eq(${item})`, row).text(
+                  //     data[item].toLocaleString("pt-br", {
+                  //       style: "currency",
+                  //       currency: "BRL",
+                  //     })
+                  //   );
                 }
+                // console.log("item", item);
               });
-
               // _this.sum.forEach((col) => {
+              //   console.log("col", col);
+              //   console.log("row", row);
+              //   if (col !== 11) {
+              //     return;
+              //   }
               //   let vlr = parseFloat($(`td:eq(${col})`, row).text());
               //   $(`td:eq(${col})`, row).text(
               //     vlr.toLocaleString("pt-br", {

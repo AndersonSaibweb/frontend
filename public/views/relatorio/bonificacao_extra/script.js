@@ -94,12 +94,24 @@ table.nameTable = "#example1";
 table.check = false;
 table.head = {
   AREA: "Área",
+  PEDIDO: "Pedido",
+  NOTA_FISCAL: "Nota Fiscal",
+  COD_GER: "Cod. Ger.",
   GERENTE: "Gerente",
+  COD_REP: "Cod. Repr.",
   REPRESENTANTE: "Representante",
+  COD_VEND: "Cod. Vend.",
   VENDEDOR: "Vendedor",
-  // 'CLIENTE': 'Cliente',
-  // 'EMBALAGEM': 'Embalagem',
-  // 'PRODUTO': 'Produto',
+  COD_CLI: "Cod. Cli.",
+
+  CLIENTE: "Cliente",
+  COD_EMB: "Cod. Emb",
+  EMBALAGEM: "Embalagem",
+  COD_PROD: "Cod. Prod.",
+  ANO: "Ano",
+  CIDADE: "Cidade",
+  QUANTIDADE: "Quantidade",
+  PRODUTO: "Produto",
   VENDAS_GERAL: "Vendas Geral",
   DEVOLUCOES: "Devoluções",
   VLR_COMERCIAL: "Vlr. Comercial",
@@ -110,7 +122,7 @@ table.head = {
   VLR_FINANCEIRO: "Vlr. Financeiro",
   A_FATURAR: "Á Faturar",
   CARTEIRA: "Carteira",
-  BONIFICACAO: "Bonificação",
+  VALOR: "Valor",
   BONIFICACAO_EXTRA: "Bonif. extra",
 };
 table.sum = [4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -182,18 +194,51 @@ getAll = () => {
     zerarCarteira = false;
   }
 
+  console.log("dataInicial", dataInicial);
+  console.log("dataFinal", dataFinal);
   let json = {};
   json["DT_INICIAL"] = dataInicial;
   json["DT_FINAL"] = dataFinal;
 
+  $("#loading").removeAttr("hidden");
   ajax(
-    _BASE_URL + "api/v1/relatorio/get_view_analise_vendas",
+    _BASE_URL + "api/v1/relatorio/get_view_bonificacao_extra",
     "POST",
     json,
     function (res) {
-      console.log(res);
-      table.data = res;
+      console.log("res", res);
+      console.log(res.length);
+
+      table.data = res.length
+        ? [...res]
+        : [
+            {
+              PEDIDO: null,
+              NOTA_FISCAL: null,
+              AREA: "",
+              COD_GER: null,
+              GERENTE: "",
+              COD_REP: null,
+              REPRESENTANTE: "",
+              COD_VEND: null,
+              VENDEDOR: "",
+              COD_CLI: null,
+              CLIENTE: "",
+              CIDADE: "",
+              UF: "",
+              COD_EMB: null,
+              EMBALAGEM: "",
+              COD_PROD: null,
+              PRODUTO: "",
+              MES: "",
+              ANO: "",
+              VALOR: null,
+              QUANTIDADE: null,
+            },
+          ];
       table.generate();
+      // $("#loading").attr("hidden", true);
+      // $("#message").text("");
     }
   );
 };

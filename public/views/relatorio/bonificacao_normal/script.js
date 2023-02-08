@@ -94,12 +94,24 @@ table.nameTable = "#example1";
 table.check = false;
 table.head = {
   AREA: "Área",
+  PEDIDO: "Pedido",
+  NOTA_FISCAL: "Nota Fiscal",
+  COD_GER: "Cod. Ger.",
   GERENTE: "Gerente",
+  COD_REP: "Cod. Repr.",
   REPRESENTANTE: "Representante",
+  COD_VEND: "Cod. Vend.",
   VENDEDOR: "Vendedor",
-  // 'CLIENTE': 'Cliente',
-  // 'EMBALAGEM': 'Embalagem',
-  // 'PRODUTO': 'Produto',
+  COD_CLI: "Cod. Cli.",
+
+  CLIENTE: "Cliente",
+  COD_EMB: "Cod. Emb",
+  EMBALAGEM: "Embalagem",
+  COD_PROD: "Cod. Prod.",
+  ANO: "Ano",
+  CIDADE: "Cidade",
+  QUANTIDADE: "Quantidade",
+  PRODUTO: "Produto",
   VENDAS_GERAL: "Vendas Geral",
   DEVOLUCOES: "Devoluções",
   VLR_COMERCIAL: "Vlr. Comercial",
@@ -110,7 +122,7 @@ table.head = {
   VLR_FINANCEIRO: "Vlr. Financeiro",
   A_FATURAR: "Á Faturar",
   CARTEIRA: "Carteira",
-  BONIFICACAO: "Bonificação",
+  VALOR: "Valor",
   BONIFICACAO_EXTRA: "Bonif. extra",
 };
 table.sum = [4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -187,7 +199,7 @@ getAll = () => {
   json["DT_FINAL"] = dataFinal;
 
   ajax(
-    _BASE_URL + "api/v1/relatorio/get_view_analise_vendas",
+    _BASE_URL + "api/v1/relatorio/get_view_bonificacao",
     "POST",
     json,
     function (res) {
