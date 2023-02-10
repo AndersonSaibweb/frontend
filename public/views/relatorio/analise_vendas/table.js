@@ -551,27 +551,27 @@ class Table {
                 if (item == "BONIFICACAO" || item == "BONIFICACAO_EXTRA") {
                   data[item] = String(data[item]).replace(/([,])/g, ".");
 
-                  $("td", row)
-                    .eq(index)
-                    .text(
-                      parseFloat(data[item], 2).toLocaleString("pt-br", {
-                        style: "currency",
-                        currency: "BRL",
-                      })
-                    );
+                  // $("td", row)
+                  //   .eq(index)
+                  //   .text(
+                  //     parseFloat(data[item], 2).toLocaleString("pt-br", {
+                  //       style: "currency",
+                  //       currency: "BRL",
+                  //     })
+                  //   );
                 }
               });
 
-              // _this.sum.forEach((col) => {
-              //   let vlr = parseFloat($(`td:eq(${col})`, row).text());
-              //   $(`td:eq(${col})`, row).text(
-              //     vlr.toLocaleString("pt-br", {
-              //       style: "currency",
-              //       currency: "BRL",
-              //     })
-              //   );
-              //   // console.log($(`td:eq(${col})`, row).text())
-              // });
+              _this.sum.forEach((col) => {
+                let vlr = parseFloat($(`td:eq(${col})`, row).text());
+                $(`td:eq(${col})`, row).text(
+                  vlr.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })
+                );
+                // console.log($(`td:eq(${col})`, row).text())
+              });
             },
             language: {
               sProcessing: "A processar...",

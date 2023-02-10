@@ -113,7 +113,7 @@ table.head = {
   BONIFICACAO: "Bonificação",
   BONIFICACAO_EXTRA: "Bonif. extra",
 };
-table.sum = [4, 5, 6, 7, 8, 9, 10, 11, 12];
+table.sum = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 table.width = {
   ID: "1px",
   GERENTE: "150px",
