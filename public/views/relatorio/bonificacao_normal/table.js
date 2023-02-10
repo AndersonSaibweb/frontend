@@ -371,22 +371,27 @@ class Table {
 
               $(api.column(0).footer()).html("Total");
 
-              // _this.sum.forEach(position => {
+              _this.sum.forEach((position) => {
+                $(api.column(position).footer()).html(
+                  api
+                    .column(position, { page: "current" })
+                    .data()
+                    .reduce(function (a, b) {
+                      if (position == 12 && zerarCarteira) {
+                        return 0;
+                      } else {
+                        return intVal(a) + intVal(b);
+                      }
+                    }, 0)
+                    .toLocaleString("pt-br", {
+                      style: position == 20 ? "decimal" : "currency",
+                      currency: "BRL",
+                    })
+                );
 
-              //     $(api.column(position).footer()).html(api
-              //         .column(position, { page: 'current' })
-              //         .data()
-              //         .reduce(function (a, b) {
-              //             if (position == 12 && zerarCarteira) {
-              //                 return 0
-              //             } else {
-              //                 return intVal(a) + intVal(b);
-              //             }
-              //         }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }));
-
-              //     // console.log($(api.column(position).footer()))
-              //     $(api.column(position).footer()).css('text-align', 'right')
-              // });
+                // console.log($(api.column(position).footer()))
+                $(api.column(position).footer()).css("text-align", "right");
+              });
             },
 
             createdRow: function (row, data, dataIndex) {
@@ -429,14 +434,14 @@ class Table {
                 }
 
                 if (item == "VALOR" && data[item]) {
-                  $("td", row)
-                    .eq(index)
-                    .text(
-                      data[item].toLocaleString("pt-br", {
-                        style: "currency",
-                        currency: "BRL",
-                      })
-                    );
+                  // $("td", row)
+                  //   .eq(index)
+                  //   .text(
+                  //     data[item].toLocaleString("pt-br", {
+                  //       style: "currency",
+                  //       currency: "BRL",
+                  //     })
+                  //   );
                   //   $(`td:eq(${item})`, row).text(
                   //     data[item].toLocaleString("pt-br", {
                   //       style: "currency",
@@ -446,21 +451,19 @@ class Table {
                 }
                 // console.log("item", item);
               });
-              // _this.sum.forEach((col) => {
-              //   console.log("col", col);
-              //   console.log("row", row);
-              //   if (col !== 11) {
-              //     return;
-              //   }
-              //   let vlr = parseFloat($(`td:eq(${col})`, row).text());
-              //   $(`td:eq(${col})`, row).text(
-              //     vlr.toLocaleString("pt-br", {
-              //       style: "currency",
-              //       currency: "BRL",
-              //     })
-              //   );
-              //   // console.log($(`td:eq(${col})`, row).text())
-              // });
+              _this.sum.forEach((col) => {
+                // if (col < 18) {
+                //   return;
+                // }
+                let vlr = parseFloat($(`td:eq(${col})`, row).text());
+                $(`td:eq(${col})`, row).text(
+                  vlr.toLocaleString("pt-br", {
+                    style: col == 20 ? "decimal" : "currency",
+                    currency: "BRL",
+                  })
+                );
+                // console.log($(`td:eq(${col})`, row).text())
+              });
             },
             language: {
               sProcessing: "A processar...",

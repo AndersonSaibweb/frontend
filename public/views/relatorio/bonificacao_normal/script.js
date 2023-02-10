@@ -125,7 +125,7 @@ table.head = {
   VALOR: "Valor",
   BONIFICACAO_EXTRA: "Bonif. extra",
 };
-table.sum = [4, 5, 6, 7, 8, 9, 10, 11, 12];
+table.sum = [19, 20];
 table.width = {
   ID: "1px",
   GERENTE: "150px",
@@ -203,7 +203,6 @@ getAll = () => {
     "POST",
     json,
     function (res) {
-      console.log(res);
       table.data = res;
       table.generate();
     }
