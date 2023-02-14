@@ -6,7 +6,6 @@ function getAllGrupoUsuario() {
       "GET",
       {},
       function (res) {
-        console.log(res);
         if (res.length) {
           $("#example1").dataTable().fnDestroy();
 

@@ -106,7 +106,7 @@ function createGrupoUsuario(base64String) {
       function (res) {
         if (res.status == 200) {
           Swal.fire({
-            title: "Grupo salvo!",
+            title: "Grupo salvos!",
             text: "",
             icon: "success",
             showCancelButton: false,
