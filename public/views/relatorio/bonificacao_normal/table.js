@@ -154,8 +154,12 @@ class Table {
     if (!_this.data.length) {
       return {
         result: false,
-        message: "url_get_all must be specified",
+        message: "Não foram encontrados dados para exibição",
       };
+      // return {
+      //   result: false,
+      //   message: "url_get_all must be specified",
+      // };
     }
 
     if (_this.btn.refresh && !_this.btn.refreshName.length) {
@@ -558,6 +562,7 @@ class Table {
         $("#message").text("Atualizado " + date.format(new Date()));
         $("#periodo").removeAttr("hidden");
       } else {
+        // console.log($(_this.nameTable)?.dataTable());
         $(_this.nameTable).dataTable().fnDestroy();
         $("#itens").html("");
         $("#message").text("Nenhum resultado");
@@ -575,7 +580,7 @@ class Table {
     let keysFields = Object.keys(_this.fields);
     keysFields.forEach((key) => {
       let element = _this.fields[key];
-      console.log(element);
+
       let createField = `
             <div ${element.hidden == true ? "hidden" : ""} class="${
         element.class != undefined ? element.class : ""

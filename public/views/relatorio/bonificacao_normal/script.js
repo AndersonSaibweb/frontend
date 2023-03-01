@@ -81,9 +81,6 @@ $("#reservationtime").daterangepicker({
   },
 });
 
-console.log($("#reservationtime").data("daterangepicker").startDate);
-console.log($("#reservationtime").data("daterangepicker").endDate);
-
 const table = new Table();
 
 table.searching = true;
@@ -203,6 +200,34 @@ getAll = () => {
     "POST",
     json,
     function (res) {
+      if (!res.length) {
+        res = [
+          {
+            PEDIDO: null,
+            NOTA_FISCAL: null,
+            AREA: "",
+            COD_GER: null,
+            GERENTE: "",
+            COD_REP: null,
+            REPRESENTANTE: "",
+            COD_VEND: null,
+            VENDEDOR: "",
+            COD_CLI: null,
+            CLIENTE: "",
+            CIDADE: "",
+            UF: "",
+            COD_EMB: null,
+            EMBALAGEM: "",
+            COD_PROD: null,
+            PRODUTO: "",
+            MES: "",
+            ANO: "",
+            VALOR: 0,
+            QUANTIDADE: 0,
+          },
+        ];
+      }
+
       table.data = res;
       table.generate();
     }

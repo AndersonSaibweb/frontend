@@ -193,9 +193,6 @@ getAll = () => {
   if (dataFinal.substr(3, 2) == mes && dataFinal.substr(6, 4) == anoAtual) {
     zerarCarteira = false;
   }
-
-  console.log("dataInicial", dataInicial);
-  console.log("dataFinal", dataFinal);
   let json = {};
   json["DT_INICIAL"] = dataInicial;
   json["DT_FINAL"] = dataFinal;
@@ -206,9 +203,6 @@ getAll = () => {
     "POST",
     json,
     function (res) {
-      console.log("res", res);
-      console.log(res.length);
-
       table.data = res.length
         ? [...res]
         : [
@@ -232,8 +226,8 @@ getAll = () => {
               PRODUTO: "",
               MES: "",
               ANO: "",
-              VALOR: null,
-              QUANTIDADE: null,
+              VALOR: 0,
+              QUANTIDADE: 0,
             },
           ];
       table.generate();
